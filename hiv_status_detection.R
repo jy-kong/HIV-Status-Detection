@@ -90,12 +90,12 @@ angola_women_selected_factor <- dplyr::select(angola_women_factor, v001, v002, v
 
 ## Merging / joining both the data
 # Base file [unit of analysis] --> <angola_hiv_factor> file
-final_dataset_factor_angola <- right_join(angola_women_selected_factor, angola_hiv_factor, 
-                                    by = c("v001" = "hivclust", 
-                                           "v002" = "hivnumb", 
-                                           "v003" = "hivline"), 
-                                    keep = FALSE, 
-                                    na_matches = "never")
+final_dataset_factor_angola <- right_join(angola_women_selected_factor, angola_hiv_factor,
+                                          by = c("v001" = "hivclust",
+                                                 "v002" = "hivnumb",
+                                                 "v003" = "hivline"),
+                                          keep = FALSE,
+                                          na_matches = "never")
 # drop the 3 matching variables/columns (with <keep = FALSE>) for encoding purposes (carry no importance weightage)
 final_dataset_factor_angola <- dplyr::select(final_dataset_factor_angola, -c(v001, v002, v003))
 
@@ -121,9 +121,9 @@ summary(final_dataset_angola)[,1:6]
 # final_dataset_angola
 
 # final_dataset_angola %>% create_report(
-#   output_file = "EDA_DataExplorer", 
-#   output_dir = "/Users/kjyuaan8/Desktop/Year 3 Sem 1/WIH3001 DSP/Implementation/Reports - EDA", 
-#   report_title = "Exploratory Data Analysis (EDA) - Data Profiling Report - DHS HIV Dataset (Angola's Women)", 
+#   output_file = "EDA_DataExplorer",
+#   output_dir = "/Users/kjyuaan8/Desktop/Year 3 Sem 1/WIH3001 DSP/Implementation/Reports - EDA",
+#   report_title = "Exploratory Data Analysis (EDA) - Data Profiling Report - DHS HIV Dataset (Angola's Women)",
 #   y = "blood.test.result")
 
 ## CONTENTS
@@ -140,8 +140,8 @@ summary(final_dataset_angola)[,1:6]
 ### 2) SmartEDA
 
 # final_dataset_angola %>% ExpReport(
-#   Target = "blood.test.result", 
-#   op_file = "EDA_SmartEDA", 
+#   Target = "blood.test.result",
+#   op_file = "EDA_SmartEDA",
 #   op_dir = "/Users/kjyuaan8/Desktop/Year 3 Sem 1/WIH3001 DSP/Implementation/Reports - EDA")
 
 
@@ -157,11 +157,11 @@ summary(final_dataset_angola)[,1:6]
 
 
 ### Observe frequency and percentage of the target variable: <blood.test.result>
-cbind(freq = table(final_dataset_angola$`blood test result`), percentage = 
+cbind(freq = table(final_dataset_angola$`blood test result`), percentage =
         prop.table(table(final_dataset_angola$`blood test result`)) * 100)
 
 ## EDA [Missing Plot]
-missmap(final_dataset_angola[, c(1, 2, 149, 150, 152, 153, 173, 216, 217, 218, 219, 220, 221, 222)], 
+missmap(final_dataset_angola[, c(1, 2, 149, 150, 152, 153, 173, 216, 217, 218, 219, 220, 221, 222)],
         col = c("black", "grey"), legend = TRUE) # some selected parts only
 
 
@@ -174,7 +174,7 @@ colnames(final_dataset_angola)
 
 
 ## Important STEP!!! {feature selection/feature engineering}
-# Removing na (not applicable) variables - column names starting with "na" / 
+# Removing na (not applicable) variables - column names starting with "na" /
 # questions that are no longer part of the DHS VII core questionnaire from the final_dataset_angola
 final_dataset_reduced_1 <- dplyr::select(final_dataset_angola, -starts_with("na."))
 
@@ -182,21 +182,21 @@ final_dataset_reduced_1 <- dplyr::select(final_dataset_angola, -starts_with("na.
 index_holder_1 <- which(colnames(final_dataset_reduced_1) == "sought.sti.advice.treatment.from..central.hospital")
 index_holder_2 <- which(colnames(final_dataset_reduced_1) == "sought.sti.advice.treatment.from..other")
 # convert factor to character
-final_dataset_reduced_1[index_holder_1:index_holder_2] <- lapply(final_dataset_reduced_1[index_holder_1:index_holder_2], 
+final_dataset_reduced_1[index_holder_1:index_holder_2] <- lapply(final_dataset_reduced_1[index_holder_1:index_holder_2],
                                                                  as.character)
 final_dataset_reduced_1 <- final_dataset_reduced_1 %>% mutate_at(seq(index_holder_1, index_holder_2), ~replace_na(., "no"))
 # convert character back to factor
-final_dataset_reduced_1[index_holder_1:index_holder_2] <- lapply(final_dataset_reduced_1[index_holder_1:index_holder_2], 
+final_dataset_reduced_1[index_holder_1:index_holder_2] <- lapply(final_dataset_reduced_1[index_holder_1:index_holder_2],
                                                                  as.factor)
 
 index_holder_3 <- which(colnames(final_dataset_reduced_1) == "place.for.hiv.test..central.hospital")
 index_holder_4 <- which(colnames(final_dataset_reduced_1) == "place.for.hiv.test..other")
 # convert factor to character
-final_dataset_reduced_1[index_holder_3:index_holder_4] <- lapply(final_dataset_reduced_1[index_holder_3:index_holder_4], 
+final_dataset_reduced_1[index_holder_3:index_holder_4] <- lapply(final_dataset_reduced_1[index_holder_3:index_holder_4],
                                                                  as.character)
 final_dataset_reduced_1 <- final_dataset_reduced_1 %>% mutate_at(seq(index_holder_3, index_holder_4), ~replace_na(., "no"))
 # convert character back to factor
-final_dataset_reduced_1[index_holder_3:index_holder_4] <- lapply(final_dataset_reduced_1[index_holder_3:index_holder_4], 
+final_dataset_reduced_1[index_holder_3:index_holder_4] <- lapply(final_dataset_reduced_1[index_holder_3:index_holder_4],
                                                                  as.factor)
 
 
@@ -204,32 +204,32 @@ sapply(final_dataset_reduced_1, attr, "levels") # to see factors/levels of the l
 colnames(final_dataset_reduced_1)
 str(final_dataset_reduced_1)
 
-list_of_characters <- c("number.of.sex.partners..excluding.spouse..in.last.12.months", 
-                        "number.of.sex.partners..including.spouse..in.last.12.months", 
-                        "months.ago.most.recent.hiv.test", 
-                        "time.since.last.sex.with.2nd.to.most.recent.partner", 
-                        "time.since.last.sex.with.3rd.to.most.recent.partner", 
-                        "age.of.most.recent.partner", 
-                        "age.of.2nd.to.most.recent.partner", 
-                        "age.of.3rd.to.most.recent.partner", 
-                        "total.lifetime.number.of.sex.partners", 
-                        "how.long.ago.first.had.sex.with.most.recent.partner", 
-                        "how.long.ago.first.had.sex.with.2nd.most.recent.partner", 
-                        "how.long.ago.first.had.sex.with.3rd.most.recent.partner", 
-                        "times.in.last.12.months.had.sex.with.most.recent.partner", 
-                        "times.in.last.12.months.had.sex.with.2nd.most.recent.partner", 
+list_of_characters <- c("number.of.sex.partners..excluding.spouse..in.last.12.months",
+                        "number.of.sex.partners..including.spouse..in.last.12.months",
+                        "months.ago.most.recent.hiv.test",
+                        "time.since.last.sex.with.2nd.to.most.recent.partner",
+                        "time.since.last.sex.with.3rd.to.most.recent.partner",
+                        "age.of.most.recent.partner",
+                        "age.of.2nd.to.most.recent.partner",
+                        "age.of.3rd.to.most.recent.partner",
+                        "total.lifetime.number.of.sex.partners",
+                        "how.long.ago.first.had.sex.with.most.recent.partner",
+                        "how.long.ago.first.had.sex.with.2nd.most.recent.partner",
+                        "how.long.ago.first.had.sex.with.3rd.most.recent.partner",
+                        "times.in.last.12.months.had.sex.with.most.recent.partner",
+                        "times.in.last.12.months.had.sex.with.2nd.most.recent.partner",
                         "times.in.last.12.months.had.sex.with.3rd.most.recent.partner")
 # some manually selected factors into <dbl> {numeric}
 final_dataset_reduced_1[list_of_characters] <- lapply(final_dataset_reduced_1[list_of_characters], as.numeric)
 glimpse(final_dataset_reduced_1)
 
 # dealing with HIV (response) part of the dataset
-final_dataset_reduced_2 <- dplyr::select(final_dataset_reduced_1, -bar.code, -lab.number, -assay.1.result, 
-                                  -assay.2.result, -assay.3.result)
+final_dataset_reduced_2 <- dplyr::select(final_dataset_reduced_1, -bar.code, -lab.number, -assay.1.result,
+                                         -assay.2.result, -assay.3.result)
 final_dataset_reduced_2["blood.test.result"] <- lapply(final_dataset_reduced_2["blood.test.result"], as.character)
 # miracle -> only 4 unique values left! ("hiv negative", "hiv  positive", "inconclusive", "indeterminate")
-final_dataset_reduced_2["blood.test.result"][final_dataset_reduced_2["blood.test.result"] == "indeterminate" | 
-                                               final_dataset_reduced_2["blood.test.result"] == "inconclusive"] <- 
+final_dataset_reduced_2["blood.test.result"][final_dataset_reduced_2["blood.test.result"] == "indeterminate" |
+                                               final_dataset_reduced_2["blood.test.result"] == "inconclusive"] <-
   "hiv negative"
 final_dataset_reduced_2["blood.test.result"][final_dataset_reduced_2["blood.test.result"] == "hiv  positive"] <- "hiv positive"
 # back to factor
@@ -241,13 +241,13 @@ sapply(final_dataset_reduced_2, attr, "levels") # to see factors/levels of the l
 
 ### METHOD/TECHNIQUE 1: Removal of variables with too many null/missing values
 ## Only choose columns where proportion of null values in each column is less than 80% (less null/missing values)
-final_dataset_reduced_3 <- final_dataset_reduced_2[colSums(is.na(final_dataset_reduced_2)) / 
+final_dataset_reduced_3 <- final_dataset_reduced_2[colSums(is.na(final_dataset_reduced_2)) /
                                                      nrow(final_dataset_reduced_2) < .8]
 
 ### METHOD/TECHNIQUE 2: Identification of near zero variance predictors
-# nearZeroVar() diagnoses predictors that have one unique value (i.e. are zero variance predictors) or 
-# predictors that are have both of the following characteristics: 
-# (i) they have very few unique values relative to the number of samples [uniqueCut]; and 
+# nearZeroVar() diagnoses predictors that have one unique value (i.e. are zero variance predictors) or
+# predictors that are have both of the following characteristics:
+# (i) they have very few unique values relative to the number of samples [uniqueCut]; and
 # (ii) the ratio of the frequency of the most common value to the frequency of the second most common value is large [freqCut].
 # Filter out low-information predictors/variables/columns [low-variance and correlated variables - prevents collinearity]
 ### DEFAULT: freqCut = 19, uniqueCut = 10
@@ -301,14 +301,14 @@ varslist <- colnames(final_dataset_reduced_4)
 treatplan <- designTreatmentsZ(final_dataset_reduced_4, varslist, verbose = FALSE)
 summary(treatplan)
 glimpse(treatplan$scoreFrame)
-head(scoreFrame <- treatplan$scoreFrame %>% 
+head(scoreFrame <- treatplan$scoreFrame %>%
        dplyr::select(varName, origName, code))
-# OR 
-# head(scoreFrame <- treatplan %>% 
-#        use_series(scoreFrame) %>% 
+# OR
+# head(scoreFrame <- treatplan %>%
+#        use_series(scoreFrame) %>%
 #        dplyr::select(varName, origName, code))
-head(newvars <- scoreFrame %>% 
-       filter(code %in% c("clean", "lev")) %>% 
+head(newvars <- scoreFrame %>%
+       filter(code %in% c("clean", "lev")) %>%
        use_series(varName))
 # with response variables
 women_hiv_treat1 <- prepare(treatplan, final_dataset_reduced_4, varRestriction = newvars)
@@ -321,11 +321,11 @@ varslist2 <- colnames(women_hiv)
 treatplan2 <- designTreatmentsZ(women_hiv, varslist2, verbose = FALSE)
 summary(treatplan2)
 glimpse(treatplan2$scoreFrame)
-head(scoreFrame2 <- treatplan2 %>% 
-       use_series(scoreFrame) %>% 
+head(scoreFrame2 <- treatplan2 %>%
+       use_series(scoreFrame) %>%
        dplyr::select(varName, origName, code))
-head(newvars2 <- scoreFrame2 %>% 
-       filter(code %in% c("clean", "lev")) %>% 
+head(newvars2 <- scoreFrame2 %>%
+       filter(code %in% c("clean", "lev")) %>%
        use_series(varName))
 # with response variables
 women_hiv_treat3 <- prepare(treatplan2, women_hiv, varRestriction = newvars2)
@@ -425,7 +425,7 @@ glimpse(tail(women_hiv_treat_smote_ORI))
 ##########################################################################################################################################################
 
 # Real FEATURE SELECTION methods/techniques:
-### 3 Methods: 
+### 3 Methods:
 # (i) Stepwise Forward and Backward Regression - 30 out of 34 variables chosen
 # (ii) Boruta algorithm - 34 out of 34 variables chosen (ALL)
 # (iii) Variable Importance from machine learning algorithm - 12 out of 34 variables chosen
@@ -444,8 +444,8 @@ full_model
 summary(full_model)
 
 # Use forward + backward ("both") stepwise algorithms to build a parsimonious model
-step_model <- stats::step(null_model, scope = list(lower = null_model, upper = full_model), 
-                   direction = "both", trace = 0, steps = 1000) # TAKE TIME!!!
+step_model <- stats::step(null_model, scope = list(lower = null_model, upper = full_model),
+                          direction = "both", trace = 0, steps = 1000) # TAKE TIME!!!
 step_model
 summary(step_model)
 
@@ -496,9 +496,9 @@ rpart_final$blood.test.result <- women_hiv_treat_smote_ORI$blood.test.result
 
 ## Method 4: Pearson's Chi-squared test (contingency tables)
 # -- a statistical hypothesis test used in the analysis of contingency tables (RANKING) when the sample sizes are large
-# -- a statistical test applied to sets of categorical data to evaluate how likely it is that any observed difference 
+# -- a statistical test applied to sets of categorical data to evaluate how likely it is that any observed difference
 # between the sets arose by chance
-# - to examine whether two categorical variables (two dimensions of the contingency table) are 
+# - to examine whether two categorical variables (two dimensions of the contingency table) are
 # independent in influencing the test statistic (values within the table)
 
 ### !! This method is used here because HIV status detection is a classification problem with CATEGORICAL OUTPUT VARIABLE !!
@@ -514,17 +514,17 @@ chi_squared_data <- women_hiv_treat_smote_ORI %>% relocate(blood.test.result, .a
 # create a data frame for Pearson's Chi-squared test
 for (i in 1:(ncol(chi_squared_data) - 1)) {
   chi_sq = chisq.test(chi_squared_data[["blood.test.result"]], chi_squared_data[[i]], correct = FALSE)
-  new_row = c(vars_selection = colnames(chi_squared_data[i]), chi_squared = chi_sq[["statistic"]][["X-squared"]], 
+  new_row = c(vars_selection = colnames(chi_squared_data[i]), chi_squared = chi_sq[["statistic"]][["X-squared"]],
               p_value = chi_sq[["p.value"]])
   chi_sq_table = rbind(chi_sq_table, new_row)
 } # only can be run once
 chi_sq_table = chi_sq_table[-1, ] # remove the first dummy row
-# sort according to p_value in ascending order (smallest to biggest). ranking order / 
+# sort according to p_value in ascending order (smallest to biggest). ranking order /
 ## descending order of chi_squared because [low p_value corresponds to high chi_squared]
 (chi_sq_table <- chi_sq_table[order(chi_sq_table$chi_squared, decreasing = TRUE), ]) # wrong here actually but never mind!
 # maybe right?
 
-#### Theory behind: 
+#### Theory behind:
 # H0 (null hypothesis): The two variables are independent
 # H1 (alternative hypothesis): The two variables relate to each other (dependent)
 ## Significance Level = 0.05 (predetermined)
@@ -541,21 +541,21 @@ chi_sq_final$blood.test.result <- women_hiv_treat_smote_ORI$blood.test.result
 ##########################################################################################################################################################
 
 ## Data Viz - Word Clouds
-# Word clouds for the overall dataset first!!! + 
-# Creating word clouds for the variables selected using those 4 techniques: <stepwise_final>, <boruta_final>, <rpart_final>, 
+# Word clouds for the overall dataset first!!! +
+# Creating word clouds for the variables selected using those 4 techniques: <stepwise_final>, <boruta_final>, <rpart_final>,
 # <chi_sq_final> and observe their differences!
 
 
 # function to create a word cloud
 create_wordcloud <- function(data, num_words = 100, background = "white") {
-
+  
   # If a dataframe is provided, make sure it has the required columns
   if (is.data.frame(data)) {
     if (!"word" %in% names(data) || !"freq" %in% names(data)) {
       stop("Invalid data: expecting two columns named 'word' and 'freq'")
     }
   }
-
+  
   # If text is provided, convert it to a dataframe of word frequencies
   if (is.character(data)) {
     corpus <- Corpus(VectorSource(data))
@@ -567,18 +567,18 @@ create_wordcloud <- function(data, num_words = 100, background = "white") {
     data <- sort(rowSums(tdm), decreasing = TRUE)
     data <- data.frame(word = names(data), freq = as.numeric(data))
   }
-
+  
   # Make sure a proper num_words is provided
   if (!is.numeric(num_words) || num_words < 3) {
     num_words <- 3
   }
-
+  
   # Grab the top n most common words
   data <- head(data, n = num_words)
   if (nrow(data) == 0) {
     return(NULL)
   }
-
+  
   wordcloud2(data, backgroundColor = background)
 }
 
@@ -603,7 +603,7 @@ create_wordcloud(paste(strsplit(paste(colnames(chi_sq_final), collapse = " "), "
 
 ##### Data Modelling Process/Phase + Evaluation Metrics: AUC #####
 ### <CLASSIFICATION PROBLEM> ###
-# Recall that we have 4 types of data with different variable counts: <stepwise_final>, <boruta_final>, <rpart_final>, 
+# Recall that we have 4 types of data with different variable counts: <stepwise_final>, <boruta_final>, <rpart_final>,
 # <chi_sq_final>
 ## <stepwise_final>: Stepwise Forward and Backward Regression - 30 features, 1 target/response
 ## <boruta_final>: Boruta algorithm - 34 features, 1 target/response [full model]
@@ -652,7 +652,7 @@ table(stepwise_final$blood.test.result[myFolds_stepwise$Fold5]) / length(myFolds
 # A1) Fit elastic net model: model_glmnet
 set.seed(950)
 (stepwise_model_glmnet <- train(
-  x = dplyr::select(stepwise_final, -blood.test.result), 
+  x = dplyr::select(stepwise_final, -blood.test.result),
   y = stepwise_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "glmnet",
@@ -670,9 +670,9 @@ set.seed(950)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-glmnet_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_glmnet, type = "prob")$hiv.negative > 0.5, 
-                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
-# OR 
+glmnet_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_glmnet, type = "prob")$hiv.negative > 0.5,
+                                             "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+# OR
 # glmnet_predict_stepwise_0.5 <- predict(stepwise_model_glmnet) # DEFAULT type = "raw"
 table(glmnet_predict_stepwise_0.5)
 # Create confusion matrix
@@ -680,7 +680,7 @@ table(glmnet_predict_stepwise_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-glmnet_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_glmnet, type = "prob")$hiv.negative > 0.8, 
+glmnet_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_glmnet, type = "prob")$hiv.negative > 0.8,
                                              "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(glmnet_predict_stepwise_0.8)
 # Create confusion matrix
@@ -688,7 +688,7 @@ table(glmnet_predict_stepwise_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-glmnet_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_glmnet, type = "prob")$hiv.negative > 0.2, 
+glmnet_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_glmnet, type = "prob")$hiv.negative > 0.2,
                                              "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(glmnet_predict_stepwise_0.2)
 # Create confusion matrix
@@ -696,21 +696,21 @@ table(glmnet_predict_stepwise_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_glmnet_predict_stepwise <- colAUC(predict(stepwise_model_glmnet, type = "prob")$hiv.positive, 
+(roc_glmnet_predict_stepwise <- colAUC(predict(stepwise_model_glmnet, type = "prob")$hiv.positive,
                                        stepwise_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_glmnet_predict_stepwise <- colAUC(predict(stepwise_model_glmnet, type = "prob")$hiv.negative, 
+# (roc_glmnet_predict_stepwise <- colAUC(predict(stepwise_model_glmnet, type = "prob")$hiv.negative,
 #                                        stepwise_final$blood.test.result, plotROC = TRUE))
 
 
 
-### NOTES: 
+### NOTES:
 ### Lasso regression (1): penalizes number of non-zero coefficients [number]
 ### Ridge regression (0): penalizes absolute magnitude of coefficients [size]
-### 'glmnet' is the combination of lasso and ridge regression where: 
+### 'glmnet' is the combination of lasso and ridge regression where:
 ### alpha = 0 is pure ridge regression, alpha = 1 is pure lasso regression [Mixing Percentage]
 ### lambda is the size of the penalty [Regularization Parameter]
-### 
+###
 
 # to observe the hyperparameters tuned (grid search/tuning grid)
 plot(stepwise_model_glmnet)
@@ -720,8 +720,8 @@ plot(stepwise_model_glmnet)
 # to observe the full regularization path for all of the models with alpha = 0 [pure ridge]
 ## Left: intercept only model (high value of lambda)
 ## Right: full model with no penalty (low value of lambda)
-### The plot shows how the regression coefficients are "shrunk" from right to left as we increase the strength of the penalty 
-### on coefficient size, and therefore decrease the complexity of the model. 
+### The plot shows how the regression coefficients are "shrunk" from right to left as we increase the strength of the penalty
+### on coefficient size, and therefore decrease the complexity of the model.
 ### We can also see some lines hitting zero as we increase lambda, which represents these coefficients dropping out of the model.
 plot(stepwise_model_glmnet$finalModel)
 
@@ -731,7 +731,7 @@ plot(stepwise_model_glmnet$finalModel)
 # A2) Fit random forest: model_rf
 set.seed(951)
 (stepwise_model_rf <- train(
-  x = dplyr::select(stepwise_final, -blood.test.result), 
+  x = dplyr::select(stepwise_final, -blood.test.result),
   y = stepwise_final$blood.test.result,
   tuneLength = 5, # the maximum number of tuning parameter combinations that will be generated by the random search
   metric = "ROC", # AUC as the evaluation metric
@@ -743,9 +743,9 @@ set.seed(951)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-rf_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_rf, type = "prob")$hiv.negative > 0.5, 
-                                             "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
-# OR 
+rf_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_rf, type = "prob")$hiv.negative > 0.5,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+# OR
 # rf_predict_stepwise_0.5 <- predict(stepwise_model_rf) # DEFAULT type = "raw"
 table(rf_predict_stepwise_0.5)
 # Create confusion matrix
@@ -753,26 +753,26 @@ table(rf_predict_stepwise_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-rf_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_rf, type = "prob")$hiv.negative > 0.8, 
-                                             "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+rf_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_rf, type = "prob")$hiv.negative > 0.8,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(rf_predict_stepwise_0.8)
 # Create confusion matrix
 (cm_rf_predict_stepwise_0.8 <- confusionMatrix(rf_predict_stepwise_0.8, stepwise_final$blood.test.result))
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-rf_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_rf, type = "prob")$hiv.negative > 0.2, 
-                                             "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+rf_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_rf, type = "prob")$hiv.negative > 0.2,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(rf_predict_stepwise_0.2)
 # Create confusion matrix
 (cm_rf_predict_stepwise_0.2 <- confusionMatrix(rf_predict_stepwise_0.2, stepwise_final$blood.test.result))
 
 
 # Make ROC curve <hiv.positive>
-(roc_rf_predict_stepwise <- colAUC(predict(stepwise_model_rf, type = "prob")$hiv.positive, 
-                                       stepwise_final$blood.test.result, plotROC = TRUE))
+(roc_rf_predict_stepwise <- colAUC(predict(stepwise_model_rf, type = "prob")$hiv.positive,
+                                   stepwise_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_rf_predict_stepwise <- colAUC(predict(stepwise_model_rf, type = "prob")$hiv.negative, 
+# (roc_rf_predict_stepwise <- colAUC(predict(stepwise_model_rf, type = "prob")$hiv.negative,
 #                                        stepwise_final$blood.test.result, plotROC = TRUE))
 
 
@@ -789,7 +789,7 @@ plot(stepwise_model_rf)
 # A3) Fit linear discriminant analysis: model_lda
 set.seed(952)
 (stepwise_model_lda <- train(
-  x = dplyr::select(stepwise_final, -blood.test.result), 
+  x = dplyr::select(stepwise_final, -blood.test.result),
   y = stepwise_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "lda",
@@ -800,9 +800,9 @@ set.seed(952)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-lda_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_lda, type = "prob")$hiv.negative > 0.5, 
-                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
-# OR 
+lda_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_lda, type = "prob")$hiv.negative > 0.5,
+                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+# OR
 # lda_predict_stepwise_0.5 <- predict(stepwise_model_lda) # DEFAULT type = "raw"
 table(lda_predict_stepwise_0.5)
 # Create confusion matrix
@@ -810,26 +810,26 @@ table(lda_predict_stepwise_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-lda_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_lda, type = "prob")$hiv.negative > 0.8, 
-                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+lda_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_lda, type = "prob")$hiv.negative > 0.8,
+                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(lda_predict_stepwise_0.8)
 # Create confusion matrix
 (cm_lda_predict_stepwise_0.8 <- confusionMatrix(lda_predict_stepwise_0.8, stepwise_final$blood.test.result))
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-lda_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_lda, type = "prob")$hiv.negative > 0.2, 
-                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+lda_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_lda, type = "prob")$hiv.negative > 0.2,
+                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(lda_predict_stepwise_0.2)
 # Create confusion matrix
 (cm_lda_predict_stepwise_0.2 <- confusionMatrix(lda_predict_stepwise_0.2, stepwise_final$blood.test.result))
 
 
 # Make ROC curve <hiv.positive>
-(roc_lda_predict_stepwise <- colAUC(predict(stepwise_model_lda, type = "prob")$hiv.positive, 
-                                   stepwise_final$blood.test.result, plotROC = TRUE))
+(roc_lda_predict_stepwise <- colAUC(predict(stepwise_model_lda, type = "prob")$hiv.positive,
+                                    stepwise_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_lda_predict_stepwise <- colAUC(predict(stepwise_model_lda, type = "prob")$hiv.negative, 
+# (roc_lda_predict_stepwise <- colAUC(predict(stepwise_model_lda, type = "prob")$hiv.negative,
 #                                        stepwise_final$blood.test.result, plotROC = TRUE))
 
 
@@ -838,7 +838,7 @@ table(lda_predict_stepwise_0.2)
 # A4) Fit support vector machine with a radial kernel: model_svm
 set.seed(953)
 (stepwise_model_svm <- train(
-  x = dplyr::select(stepwise_final, -blood.test.result), 
+  x = dplyr::select(stepwise_final, -blood.test.result),
   y = stepwise_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "svmRadial",
@@ -849,9 +849,9 @@ set.seed(953)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-svm_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_svm, type = "prob")$hiv.negative > 0.5, 
+svm_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_svm, type = "prob")$hiv.negative > 0.5,
                                           "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
-# OR 
+# OR
 # svm_predict_stepwise_0.5 <- predict(stepwise_model_svm) # DEFAULT type = "raw"
 table(svm_predict_stepwise_0.5)
 # Create confusion matrix
@@ -859,7 +859,7 @@ table(svm_predict_stepwise_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-svm_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_svm, type = "prob")$hiv.negative > 0.8, 
+svm_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_svm, type = "prob")$hiv.negative > 0.8,
                                           "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(svm_predict_stepwise_0.8)
 # Create confusion matrix
@@ -867,7 +867,7 @@ table(svm_predict_stepwise_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-svm_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_svm, type = "prob")$hiv.negative > 0.2, 
+svm_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_svm, type = "prob")$hiv.negative > 0.2,
                                           "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(svm_predict_stepwise_0.2)
 # Create confusion matrix
@@ -875,10 +875,10 @@ table(svm_predict_stepwise_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_svm_predict_stepwise <- colAUC(predict(stepwise_model_svm, type = "prob")$hiv.positive, 
+(roc_svm_predict_stepwise <- colAUC(predict(stepwise_model_svm, type = "prob")$hiv.positive,
                                     stepwise_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_svm_predict_stepwise <- colAUC(predict(stepwise_model_svm, type = "prob")$hiv.negative, 
+# (roc_svm_predict_stepwise <- colAUC(predict(stepwise_model_svm, type = "prob")$hiv.negative,
 #                                        stepwise_final$blood.test.result, plotROC = TRUE))
 
 
@@ -895,7 +895,7 @@ plot(stepwise_model_svm)
 # A5) Fit extreme gradient boosting: model_xgboost
 set.seed(954)
 (stepwise_model_xgboost <- train(
-  x = dplyr::select(stepwise_final, -blood.test.result), 
+  x = dplyr::select(stepwise_final, -blood.test.result),
   y = stepwise_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "xgbTree",
@@ -906,9 +906,9 @@ set.seed(954)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-xgboost_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_xgboost, type = "prob")$hiv.negative > 0.5, 
-                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
-# OR 
+xgboost_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_xgboost, type = "prob")$hiv.negative > 0.5,
+                                              "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+# OR
 # xgboost_predict_stepwise_0.5 <- predict(stepwise_model_xgboost) # DEFAULT type = "raw"
 table(xgboost_predict_stepwise_0.5)
 # Create confusion matrix
@@ -916,26 +916,26 @@ table(xgboost_predict_stepwise_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-xgboost_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_xgboost, type = "prob")$hiv.negative > 0.8, 
-                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+xgboost_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_xgboost, type = "prob")$hiv.negative > 0.8,
+                                              "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(xgboost_predict_stepwise_0.8)
 # Create confusion matrix
 (cm_xgboost_predict_stepwise_0.8 <- confusionMatrix(xgboost_predict_stepwise_0.8, stepwise_final$blood.test.result))
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-xgboost_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_xgboost, type = "prob")$hiv.negative > 0.2, 
-                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+xgboost_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_xgboost, type = "prob")$hiv.negative > 0.2,
+                                              "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(xgboost_predict_stepwise_0.2)
 # Create confusion matrix
 (cm_xgboost_predict_stepwise_0.2 <- confusionMatrix(xgboost_predict_stepwise_0.2, stepwise_final$blood.test.result))
 
 
 # Make ROC curve <hiv.positive>
-(roc_xgboost_predict_stepwise <- colAUC(predict(stepwise_model_xgboost, type = "prob")$hiv.positive, 
-                                    stepwise_final$blood.test.result, plotROC = TRUE))
+(roc_xgboost_predict_stepwise <- colAUC(predict(stepwise_model_xgboost, type = "prob")$hiv.positive,
+                                        stepwise_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_xgboost_predict_stepwise <- colAUC(predict(stepwise_model_xgboost, type = "prob")$hiv.negative, 
+# (roc_xgboost_predict_stepwise <- colAUC(predict(stepwise_model_xgboost, type = "prob")$hiv.negative,
 #                                        stepwise_final$blood.test.result, plotROC = TRUE))
 
 
@@ -945,7 +945,7 @@ plot(stepwise_model_xgboost)
 ## Tuning parameter 'gamma' was held constant at a value of 0.
 ## Tuning parameter 'min_child_weight' was held constant at a value of 1.
 ## ROC was used to select the optimal model using the largest value.
-## The final values used for the model were nrounds = 150, max_depth = 3, eta = 0.4, gamma = 0, colsample_bytree = 0.8, 
+## The final values used for the model were nrounds = 150, max_depth = 3, eta = 0.4, gamma = 0, colsample_bytree = 0.8,
 ## min_child_weight = 1 and subsample = 1.
 
 
@@ -957,8 +957,8 @@ plot(stepwise_model_xgboost)
 # find("select")
 set.seed(955)
 (stepwise_model_nb <- train(
-  ## OR 
-  ## x = dplyr::select(stepwise_final, -blood.test.result), 
+  ## OR
+  ## x = dplyr::select(stepwise_final, -blood.test.result),
   ## y = stepwise_final$blood.test.result,
   blood.test.result ~ .,
   data = stepwise_final,
@@ -971,9 +971,9 @@ set.seed(955)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-nb_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_nb, type = "prob")$hiv.negative > 0.5, 
-                                              "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
-# OR 
+nb_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_nb, type = "prob")$hiv.negative > 0.5,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+# OR
 # nb_predict_stepwise_0.5 <- predict(stepwise_model_nb) # DEFAULT type = "raw"
 table(nb_predict_stepwise_0.5)
 # Create confusion matrix
@@ -981,26 +981,26 @@ table(nb_predict_stepwise_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-nb_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_nb, type = "prob")$hiv.negative > 0.8, 
-                                              "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+nb_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_nb, type = "prob")$hiv.negative > 0.8,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(nb_predict_stepwise_0.8)
 # Create confusion matrix
 (cm_nb_predict_stepwise_0.8 <- confusionMatrix(nb_predict_stepwise_0.8, stepwise_final$blood.test.result))
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-nb_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_nb, type = "prob")$hiv.negative > 0.2, 
-                                              "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+nb_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_nb, type = "prob")$hiv.negative > 0.2,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(nb_predict_stepwise_0.2)
 # Create confusion matrix
 (cm_nb_predict_stepwise_0.2 <- confusionMatrix(nb_predict_stepwise_0.2, stepwise_final$blood.test.result))
 
 
 # Make ROC curve <hiv.positive>
-(roc_nb_predict_stepwise <- colAUC(predict(stepwise_model_nb, type = "prob")$hiv.positive, 
-                                        stepwise_final$blood.test.result, plotROC = TRUE))
+(roc_nb_predict_stepwise <- colAUC(predict(stepwise_model_nb, type = "prob")$hiv.positive,
+                                   stepwise_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_nb_predict_stepwise <- colAUC(predict(stepwise_model_nb, type = "prob")$hiv.negative, 
+# (roc_nb_predict_stepwise <- colAUC(predict(stepwise_model_nb, type = "prob")$hiv.negative,
 #                                        stepwise_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1029,9 +1029,9 @@ set.seed(956)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-knn_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_knn, type = "prob")$hiv.negative > 0.5, 
-                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
-# OR 
+knn_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_knn, type = "prob")$hiv.negative > 0.5,
+                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+# OR
 # knn_predict_stepwise_0.5 <- predict(stepwise_model_knn) # DEFAULT type = "raw"
 table(knn_predict_stepwise_0.5)
 # Create confusion matrix
@@ -1039,26 +1039,26 @@ table(knn_predict_stepwise_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-knn_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_knn, type = "prob")$hiv.negative > 0.8, 
-                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+knn_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_knn, type = "prob")$hiv.negative > 0.8,
+                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(knn_predict_stepwise_0.8)
 # Create confusion matrix
 (cm_knn_predict_stepwise_0.8 <- confusionMatrix(knn_predict_stepwise_0.8, stepwise_final$blood.test.result))
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-knn_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_knn, type = "prob")$hiv.negative > 0.2, 
-                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+knn_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_knn, type = "prob")$hiv.negative > 0.2,
+                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(knn_predict_stepwise_0.2)
 # Create confusion matrix
 (cm_knn_predict_stepwise_0.2 <- confusionMatrix(knn_predict_stepwise_0.2, stepwise_final$blood.test.result))
 
 
 # Make ROC curve <hiv.positive>
-(roc_knn_predict_stepwise <- colAUC(predict(stepwise_model_knn, type = "prob")$hiv.positive, 
-                                   stepwise_final$blood.test.result, plotROC = TRUE))
+(roc_knn_predict_stepwise <- colAUC(predict(stepwise_model_knn, type = "prob")$hiv.positive,
+                                    stepwise_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_knn_predict_stepwise <- colAUC(predict(stepwise_model_knn, type = "prob")$hiv.negative, 
+# (roc_knn_predict_stepwise <- colAUC(predict(stepwise_model_knn, type = "prob")$hiv.negative,
 #                                        stepwise_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1090,9 +1090,9 @@ set.seed(957)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-nn_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_nn, type = "prob")$hiv.negative > 0.5, 
-                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
-# OR 
+nn_predict_stepwise_0.5 <- factor(ifelse(predict(stepwise_model_nn, type = "prob")$hiv.negative > 0.5,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+# OR
 # nn_predict_stepwise_0.5 <- predict(stepwise_model_nn) # DEFAULT type = "raw"
 table(nn_predict_stepwise_0.5)
 # Create confusion matrix
@@ -1100,26 +1100,26 @@ table(nn_predict_stepwise_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-nn_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_nn, type = "prob")$hiv.negative > 0.8, 
-                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+nn_predict_stepwise_0.8 <- factor(ifelse(predict(stepwise_model_nn, type = "prob")$hiv.negative > 0.8,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(nn_predict_stepwise_0.8)
 # Create confusion matrix
 (cm_nn_predict_stepwise_0.8 <- confusionMatrix(nn_predict_stepwise_0.8, stepwise_final$blood.test.result))
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-nn_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_nn, type = "prob")$hiv.negative > 0.2, 
-                                          "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
+nn_predict_stepwise_0.2 <- factor(ifelse(predict(stepwise_model_nn, type = "prob")$hiv.negative > 0.2,
+                                         "hiv.negative", "hiv.positive"), levels = levels(stepwise_final$blood.test.result))
 table(nn_predict_stepwise_0.2)
 # Create confusion matrix
 (cm_nn_predict_stepwise_0.2 <- confusionMatrix(nn_predict_stepwise_0.2, stepwise_final$blood.test.result))
 
 
 # Make ROC curve <hiv.positive>
-(roc_nn_predict_stepwise <- colAUC(predict(stepwise_model_nn, type = "prob")$hiv.positive, 
-                                    stepwise_final$blood.test.result, plotROC = TRUE))
+(roc_nn_predict_stepwise <- colAUC(predict(stepwise_model_nn, type = "prob")$hiv.positive,
+                                   stepwise_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_nn_predict_stepwise <- colAUC(predict(stepwise_model_nn, type = "prob")$hiv.negative, 
+# (roc_nn_predict_stepwise <- colAUC(predict(stepwise_model_nn, type = "prob")$hiv.negative,
 #                                        stepwise_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1163,7 +1163,7 @@ table(boruta_final$blood.test.result[myFolds_boruta$Fold5]) / length(myFolds_bor
 # B1) Fit elastic net model: model_glmnet
 set.seed(9500)
 (boruta_model_glmnet <- train(
-  x = dplyr::select(boruta_final, -blood.test.result), 
+  x = dplyr::select(boruta_final, -blood.test.result),
   y = boruta_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "glmnet",
@@ -1181,9 +1181,9 @@ set.seed(9500)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-glmnet_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_glmnet, type = "prob")$hiv.negative > 0.5, 
+glmnet_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_glmnet, type = "prob")$hiv.negative > 0.5,
                                            "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
-# OR 
+# OR
 # glmnet_predict_boruta_0.5 <- predict(boruta_model_glmnet) # DEFAULT type = "raw"
 table(glmnet_predict_boruta_0.5)
 # Create confusion matrix
@@ -1191,7 +1191,7 @@ table(glmnet_predict_boruta_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-glmnet_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_glmnet, type = "prob")$hiv.negative > 0.8, 
+glmnet_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_glmnet, type = "prob")$hiv.negative > 0.8,
                                            "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(glmnet_predict_boruta_0.8)
 # Create confusion matrix
@@ -1199,7 +1199,7 @@ table(glmnet_predict_boruta_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-glmnet_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_glmnet, type = "prob")$hiv.negative > 0.2, 
+glmnet_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_glmnet, type = "prob")$hiv.negative > 0.2,
                                            "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(glmnet_predict_boruta_0.2)
 # Create confusion matrix
@@ -1207,21 +1207,21 @@ table(glmnet_predict_boruta_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_glmnet_predict_boruta <- colAUC(predict(boruta_model_glmnet, type = "prob")$hiv.positive, 
+(roc_glmnet_predict_boruta <- colAUC(predict(boruta_model_glmnet, type = "prob")$hiv.positive,
                                      boruta_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_glmnet_predict_boruta <- colAUC(predict(boruta_model_glmnet, type = "prob")$hiv.negative, 
+# (roc_glmnet_predict_boruta <- colAUC(predict(boruta_model_glmnet, type = "prob")$hiv.negative,
 #                                        boruta_final$blood.test.result, plotROC = TRUE))
 
 
 
-### NOTES: 
+### NOTES:
 ### Lasso regression (1): penalizes number of non-zero coefficients [number]
 ### Ridge regression (0): penalizes absolute magnitude of coefficients [size]
-### 'glmnet' is the combination of lasso and ridge regression where: 
+### 'glmnet' is the combination of lasso and ridge regression where:
 ### alpha = 0 is pure ridge regression, alpha = 1 is pure lasso regression [Mixing Percentage]
 ### lambda is the size of the penalty [Regularization Parameter]
-### 
+###
 
 # to observe the hyperparameters tuned (grid search/tuning grid)
 plot(boruta_model_glmnet)
@@ -1231,8 +1231,8 @@ plot(boruta_model_glmnet)
 # to observe the full regularization path for all of the models with alpha = 0 [pure ridge]
 ## Left: intercept only model (high value of lambda)
 ## Right: full model with no penalty (low value of lambda)
-### The plot shows how the regression coefficients are "shrunk" from right to left as we increase the strength of the penalty 
-### on coefficient size, and therefore decrease the complexity of the model. 
+### The plot shows how the regression coefficients are "shrunk" from right to left as we increase the strength of the penalty
+### on coefficient size, and therefore decrease the complexity of the model.
 ### We can also see some lines hitting zero as we increase lambda, which represents these coefficients dropping out of the model.
 plot(boruta_model_glmnet$finalModel)
 
@@ -1242,7 +1242,7 @@ plot(boruta_model_glmnet$finalModel)
 # B2) Fit random forest: model_rf
 set.seed(9501)
 (boruta_model_rf <- train(
-  x = dplyr::select(boruta_final, -blood.test.result), 
+  x = dplyr::select(boruta_final, -blood.test.result),
   y = boruta_final$blood.test.result,
   tuneLength = 5, # the maximum number of tuning parameter combinations that will be generated by the random search
   metric = "ROC", # AUC as the evaluation metric
@@ -1254,9 +1254,9 @@ set.seed(9501)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-rf_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_rf, type = "prob")$hiv.negative > 0.5, 
+rf_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_rf, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
-# OR 
+# OR
 # rf_predict_boruta_0.5 <- predict(boruta_model_rf) # DEFAULT type = "raw"
 table(rf_predict_boruta_0.5)
 # Create confusion matrix
@@ -1264,7 +1264,7 @@ table(rf_predict_boruta_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-rf_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_rf, type = "prob")$hiv.negative > 0.8, 
+rf_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_rf, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(rf_predict_boruta_0.8)
 # Create confusion matrix
@@ -1272,7 +1272,7 @@ table(rf_predict_boruta_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-rf_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_rf, type = "prob")$hiv.negative > 0.2, 
+rf_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_rf, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(rf_predict_boruta_0.2)
 # Create confusion matrix
@@ -1280,10 +1280,10 @@ table(rf_predict_boruta_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_rf_predict_boruta <- colAUC(predict(boruta_model_rf, type = "prob")$hiv.positive, 
+(roc_rf_predict_boruta <- colAUC(predict(boruta_model_rf, type = "prob")$hiv.positive,
                                  boruta_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_rf_predict_boruta <- colAUC(predict(boruta_model_rf, type = "prob")$hiv.negative, 
+# (roc_rf_predict_boruta <- colAUC(predict(boruta_model_rf, type = "prob")$hiv.negative,
 #                                        boruta_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1300,7 +1300,7 @@ plot(boruta_model_rf)
 # B3) Fit linear discriminant analysis: model_lda
 set.seed(9502)
 (boruta_model_lda <- train(
-  x = dplyr::select(boruta_final, -blood.test.result), 
+  x = dplyr::select(boruta_final, -blood.test.result),
   y = boruta_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "lda",
@@ -1311,9 +1311,9 @@ set.seed(9502)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-lda_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_lda, type = "prob")$hiv.negative > 0.5, 
+lda_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_lda, type = "prob")$hiv.negative > 0.5,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
-# OR 
+# OR
 # lda_predict_boruta_0.5 <- predict(boruta_model_lda) # DEFAULT type = "raw"
 table(lda_predict_boruta_0.5)
 # Create confusion matrix
@@ -1321,7 +1321,7 @@ table(lda_predict_boruta_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-lda_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_lda, type = "prob")$hiv.negative > 0.8, 
+lda_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_lda, type = "prob")$hiv.negative > 0.8,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(lda_predict_boruta_0.8)
 # Create confusion matrix
@@ -1329,7 +1329,7 @@ table(lda_predict_boruta_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-lda_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_lda, type = "prob")$hiv.negative > 0.2, 
+lda_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_lda, type = "prob")$hiv.negative > 0.2,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(lda_predict_boruta_0.2)
 # Create confusion matrix
@@ -1337,10 +1337,10 @@ table(lda_predict_boruta_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_lda_predict_boruta <- colAUC(predict(boruta_model_lda, type = "prob")$hiv.positive, 
+(roc_lda_predict_boruta <- colAUC(predict(boruta_model_lda, type = "prob")$hiv.positive,
                                   boruta_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_lda_predict_boruta <- colAUC(predict(boruta_model_lda, type = "prob")$hiv.negative, 
+# (roc_lda_predict_boruta <- colAUC(predict(boruta_model_lda, type = "prob")$hiv.negative,
 #                                        boruta_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1349,7 +1349,7 @@ table(lda_predict_boruta_0.2)
 # B4) Fit support vector machine with a radial kernel: model_svm
 set.seed(9503)
 (boruta_model_svm <- train(
-  x = dplyr::select(boruta_final, -blood.test.result), 
+  x = dplyr::select(boruta_final, -blood.test.result),
   y = boruta_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "svmRadial",
@@ -1360,9 +1360,9 @@ set.seed(9503)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-svm_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_svm, type = "prob")$hiv.negative > 0.5, 
+svm_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_svm, type = "prob")$hiv.negative > 0.5,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
-# OR 
+# OR
 # svm_predict_boruta_0.5 <- predict(boruta_model_svm) # DEFAULT type = "raw"
 table(svm_predict_boruta_0.5)
 # Create confusion matrix
@@ -1370,7 +1370,7 @@ table(svm_predict_boruta_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-svm_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_svm, type = "prob")$hiv.negative > 0.8, 
+svm_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_svm, type = "prob")$hiv.negative > 0.8,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(svm_predict_boruta_0.8)
 # Create confusion matrix
@@ -1378,7 +1378,7 @@ table(svm_predict_boruta_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-svm_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_svm, type = "prob")$hiv.negative > 0.2, 
+svm_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_svm, type = "prob")$hiv.negative > 0.2,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(svm_predict_boruta_0.2)
 # Create confusion matrix
@@ -1386,10 +1386,10 @@ table(svm_predict_boruta_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_svm_predict_boruta <- colAUC(predict(boruta_model_svm, type = "prob")$hiv.positive, 
+(roc_svm_predict_boruta <- colAUC(predict(boruta_model_svm, type = "prob")$hiv.positive,
                                   boruta_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_svm_predict_boruta <- colAUC(predict(boruta_model_svm, type = "prob")$hiv.negative, 
+# (roc_svm_predict_boruta <- colAUC(predict(boruta_model_svm, type = "prob")$hiv.negative,
 #                                        boruta_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1406,7 +1406,7 @@ plot(boruta_model_svm)
 # B5) Fit extreme gradient boosting: model_xgboost
 set.seed(9504)
 (boruta_model_xgboost <- train(
-  x = dplyr::select(boruta_final, -blood.test.result), 
+  x = dplyr::select(boruta_final, -blood.test.result),
   y = boruta_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "xgbTree",
@@ -1417,9 +1417,9 @@ set.seed(9504)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-xgboost_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_xgboost, type = "prob")$hiv.negative > 0.5, 
+xgboost_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_xgboost, type = "prob")$hiv.negative > 0.5,
                                             "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
-# OR 
+# OR
 # xgboost_predict_boruta_0.5 <- predict(boruta_model_xgboost) # DEFAULT type = "raw"
 table(xgboost_predict_boruta_0.5)
 # Create confusion matrix
@@ -1427,7 +1427,7 @@ table(xgboost_predict_boruta_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-xgboost_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_xgboost, type = "prob")$hiv.negative > 0.8, 
+xgboost_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_xgboost, type = "prob")$hiv.negative > 0.8,
                                             "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(xgboost_predict_boruta_0.8)
 # Create confusion matrix
@@ -1435,7 +1435,7 @@ table(xgboost_predict_boruta_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-xgboost_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_xgboost, type = "prob")$hiv.negative > 0.2, 
+xgboost_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_xgboost, type = "prob")$hiv.negative > 0.2,
                                             "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(xgboost_predict_boruta_0.2)
 # Create confusion matrix
@@ -1443,10 +1443,10 @@ table(xgboost_predict_boruta_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_xgboost_predict_boruta <- colAUC(predict(boruta_model_xgboost, type = "prob")$hiv.positive, 
+(roc_xgboost_predict_boruta <- colAUC(predict(boruta_model_xgboost, type = "prob")$hiv.positive,
                                       boruta_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_xgboost_predict_boruta <- colAUC(predict(boruta_model_xgboost, type = "prob")$hiv.negative, 
+# (roc_xgboost_predict_boruta <- colAUC(predict(boruta_model_xgboost, type = "prob")$hiv.negative,
 #                                        boruta_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1456,7 +1456,7 @@ plot(boruta_model_xgboost)
 ## Tuning parameter 'gamma' was held constant at a value of 0.
 ## Tuning parameter 'min_child_weight' was held constant at a value of 1.
 ## ROC was used to select the optimal model using the largest value.
-## The final values used for the model were nrounds = 150, max_depth = 3, eta = 0.4, gamma = 0, colsample_bytree = 0.8, 
+## The final values used for the model were nrounds = 150, max_depth = 3, eta = 0.4, gamma = 0, colsample_bytree = 0.8,
 ## min_child_weight = 1 and subsample = 1.
 
 
@@ -1476,9 +1476,9 @@ set.seed(9505)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-nb_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_nb, type = "prob")$hiv.negative > 0.5, 
+nb_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_nb, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
-# OR 
+# OR
 # nb_predict_boruta_0.5 <- predict(boruta_model_nb) # DEFAULT type = "raw"
 table(nb_predict_boruta_0.5)
 # Create confusion matrix
@@ -1486,7 +1486,7 @@ table(nb_predict_boruta_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-nb_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_nb, type = "prob")$hiv.negative > 0.8, 
+nb_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_nb, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(nb_predict_boruta_0.8)
 # Create confusion matrix
@@ -1494,7 +1494,7 @@ table(nb_predict_boruta_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-nb_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_nb, type = "prob")$hiv.negative > 0.2, 
+nb_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_nb, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(nb_predict_boruta_0.2)
 # Create confusion matrix
@@ -1502,10 +1502,10 @@ table(nb_predict_boruta_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_nb_predict_boruta <- colAUC(predict(boruta_model_nb, type = "prob")$hiv.positive, 
+(roc_nb_predict_boruta <- colAUC(predict(boruta_model_nb, type = "prob")$hiv.positive,
                                  boruta_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_nb_predict_boruta <- colAUC(predict(boruta_model_nb, type = "prob")$hiv.negative, 
+# (roc_nb_predict_boruta <- colAUC(predict(boruta_model_nb, type = "prob")$hiv.negative,
 #                                        boruta_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1534,9 +1534,9 @@ set.seed(9506)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-knn_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_knn, type = "prob")$hiv.negative > 0.5, 
+knn_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_knn, type = "prob")$hiv.negative > 0.5,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
-# OR 
+# OR
 # knn_predict_boruta_0.5 <- predict(boruta_model_knn) # DEFAULT type = "raw"
 table(knn_predict_boruta_0.5)
 # Create confusion matrix
@@ -1544,7 +1544,7 @@ table(knn_predict_boruta_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-knn_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_knn, type = "prob")$hiv.negative > 0.8, 
+knn_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_knn, type = "prob")$hiv.negative > 0.8,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(knn_predict_boruta_0.8)
 # Create confusion matrix
@@ -1552,7 +1552,7 @@ table(knn_predict_boruta_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-knn_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_knn, type = "prob")$hiv.negative > 0.2, 
+knn_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_knn, type = "prob")$hiv.negative > 0.2,
                                         "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(knn_predict_boruta_0.2)
 # Create confusion matrix
@@ -1560,10 +1560,10 @@ table(knn_predict_boruta_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_knn_predict_boruta <- colAUC(predict(boruta_model_knn, type = "prob")$hiv.positive, 
+(roc_knn_predict_boruta <- colAUC(predict(boruta_model_knn, type = "prob")$hiv.positive,
                                   boruta_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_knn_predict_boruta <- colAUC(predict(boruta_model_knn, type = "prob")$hiv.negative, 
+# (roc_knn_predict_boruta <- colAUC(predict(boruta_model_knn, type = "prob")$hiv.negative,
 #                                        boruta_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1595,9 +1595,9 @@ set.seed(9507)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-nn_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_nn, type = "prob")$hiv.negative > 0.5, 
+nn_predict_boruta_0.5 <- factor(ifelse(predict(boruta_model_nn, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
-# OR 
+# OR
 # nn_predict_boruta_0.5 <- predict(boruta_model_nn) # DEFAULT type = "raw"
 table(nn_predict_boruta_0.5)
 # Create confusion matrix
@@ -1605,7 +1605,7 @@ table(nn_predict_boruta_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-nn_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_nn, type = "prob")$hiv.negative > 0.8, 
+nn_predict_boruta_0.8 <- factor(ifelse(predict(boruta_model_nn, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(nn_predict_boruta_0.8)
 # Create confusion matrix
@@ -1613,7 +1613,7 @@ table(nn_predict_boruta_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-nn_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_nn, type = "prob")$hiv.negative > 0.2, 
+nn_predict_boruta_0.2 <- factor(ifelse(predict(boruta_model_nn, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(boruta_final$blood.test.result))
 table(nn_predict_boruta_0.2)
 # Create confusion matrix
@@ -1621,10 +1621,10 @@ table(nn_predict_boruta_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_nn_predict_boruta <- colAUC(predict(boruta_model_nn, type = "prob")$hiv.positive, 
+(roc_nn_predict_boruta <- colAUC(predict(boruta_model_nn, type = "prob")$hiv.positive,
                                  boruta_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_nn_predict_boruta <- colAUC(predict(boruta_model_nn, type = "prob")$hiv.negative, 
+# (roc_nn_predict_boruta <- colAUC(predict(boruta_model_nn, type = "prob")$hiv.negative,
 #                                        boruta_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1668,7 +1668,7 @@ table(rpart_final$blood.test.result[myFolds_rpart$Fold5]) / length(myFolds_rpart
 # C1) Fit elastic net model: model_glmnet
 set.seed(95000)
 (rpart_model_glmnet <- train(
-  x = dplyr::select(rpart_final, -blood.test.result), 
+  x = dplyr::select(rpart_final, -blood.test.result),
   y = rpart_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "glmnet",
@@ -1686,9 +1686,9 @@ set.seed(95000)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-glmnet_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_glmnet, type = "prob")$hiv.negative > 0.5, 
+glmnet_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_glmnet, type = "prob")$hiv.negative > 0.5,
                                           "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
-# OR 
+# OR
 # glmnet_predict_rpart_0.5 <- predict(rpart_model_glmnet) # DEFAULT type = "raw"
 table(glmnet_predict_rpart_0.5)
 # Create confusion matrix
@@ -1696,7 +1696,7 @@ table(glmnet_predict_rpart_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-glmnet_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_glmnet, type = "prob")$hiv.negative > 0.8, 
+glmnet_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_glmnet, type = "prob")$hiv.negative > 0.8,
                                           "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(glmnet_predict_rpart_0.8)
 # Create confusion matrix
@@ -1704,7 +1704,7 @@ table(glmnet_predict_rpart_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-glmnet_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_glmnet, type = "prob")$hiv.negative > 0.2, 
+glmnet_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_glmnet, type = "prob")$hiv.negative > 0.2,
                                           "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(glmnet_predict_rpart_0.2)
 # Create confusion matrix
@@ -1712,21 +1712,21 @@ table(glmnet_predict_rpart_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_glmnet_predict_rpart <- colAUC(predict(rpart_model_glmnet, type = "prob")$hiv.positive, 
+(roc_glmnet_predict_rpart <- colAUC(predict(rpart_model_glmnet, type = "prob")$hiv.positive,
                                     rpart_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_glmnet_predict_rpart <- colAUC(predict(rpart_model_glmnet, type = "prob")$hiv.negative, 
+# (roc_glmnet_predict_rpart <- colAUC(predict(rpart_model_glmnet, type = "prob")$hiv.negative,
 #                                        rpart_final$blood.test.result, plotROC = TRUE))
 
 
 
-### NOTES: 
+### NOTES:
 ### Lasso regression (1): penalizes number of non-zero coefficients [number]
 ### Ridge regression (0): penalizes absolute magnitude of coefficients [size]
-### 'glmnet' is the combination of lasso and ridge regression where: 
+### 'glmnet' is the combination of lasso and ridge regression where:
 ### alpha = 0 is pure ridge regression, alpha = 1 is pure lasso regression [Mixing Percentage]
 ### lambda is the size of the penalty [Regularization Parameter]
-### 
+###
 
 # to observe the hyperparameters tuned (grid search/tuning grid)
 plot(rpart_model_glmnet)
@@ -1736,8 +1736,8 @@ plot(rpart_model_glmnet)
 # to observe the full regularization path for all of the models with alpha = 0 [pure ridge]
 ## Left: intercept only model (high value of lambda)
 ## Right: full model with no penalty (low value of lambda)
-### The plot shows how the regression coefficients are "shrunk" from right to left as we increase the strength of the penalty 
-### on coefficient size, and therefore decrease the complexity of the model. 
+### The plot shows how the regression coefficients are "shrunk" from right to left as we increase the strength of the penalty
+### on coefficient size, and therefore decrease the complexity of the model.
 ### We can also see some lines hitting zero as we increase lambda, which represents these coefficients dropping out of the model.
 plot(rpart_model_glmnet$finalModel)
 
@@ -1747,7 +1747,7 @@ plot(rpart_model_glmnet$finalModel)
 # C2) Fit random forest: model_rf
 set.seed(95001)
 (rpart_model_rf <- train(
-  x = dplyr::select(rpart_final, -blood.test.result), 
+  x = dplyr::select(rpart_final, -blood.test.result),
   y = rpart_final$blood.test.result,
   tuneLength = 5, # the maximum number of tuning parameter combinations that will be generated by the random search
   metric = "ROC", # AUC as the evaluation metric
@@ -1759,9 +1759,9 @@ set.seed(95001)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-rf_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_rf, type = "prob")$hiv.negative > 0.5, 
+rf_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_rf, type = "prob")$hiv.negative > 0.5,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
-# OR 
+# OR
 # rf_predict_rpart_0.5 <- predict(rpart_model_rf) # DEFAULT type = "raw"
 table(rf_predict_rpart_0.5)
 # Create confusion matrix
@@ -1769,7 +1769,7 @@ table(rf_predict_rpart_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-rf_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_rf, type = "prob")$hiv.negative > 0.8, 
+rf_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_rf, type = "prob")$hiv.negative > 0.8,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(rf_predict_rpart_0.8)
 # Create confusion matrix
@@ -1777,7 +1777,7 @@ table(rf_predict_rpart_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-rf_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_rf, type = "prob")$hiv.negative > 0.2, 
+rf_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_rf, type = "prob")$hiv.negative > 0.2,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(rf_predict_rpart_0.2)
 # Create confusion matrix
@@ -1785,10 +1785,10 @@ table(rf_predict_rpart_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_rf_predict_rpart <- colAUC(predict(rpart_model_rf, type = "prob")$hiv.positive, 
+(roc_rf_predict_rpart <- colAUC(predict(rpart_model_rf, type = "prob")$hiv.positive,
                                 rpart_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_rf_predict_rpart <- colAUC(predict(rpart_model_rf, type = "prob")$hiv.negative, 
+# (roc_rf_predict_rpart <- colAUC(predict(rpart_model_rf, type = "prob")$hiv.negative,
 #                                        rpart_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1805,7 +1805,7 @@ plot(rpart_model_rf)
 # C3) Fit linear discriminant analysis: model_lda
 set.seed(95002)
 (rpart_model_lda <- train(
-  x = dplyr::select(rpart_final, -blood.test.result), 
+  x = dplyr::select(rpart_final, -blood.test.result),
   y = rpart_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "lda",
@@ -1816,9 +1816,9 @@ set.seed(95002)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-lda_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_lda, type = "prob")$hiv.negative > 0.5, 
+lda_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_lda, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
-# OR 
+# OR
 # lda_predict_rpart_0.5 <- predict(rpart_model_lda) # DEFAULT type = "raw"
 table(lda_predict_rpart_0.5)
 # Create confusion matrix
@@ -1826,7 +1826,7 @@ table(lda_predict_rpart_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-lda_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_lda, type = "prob")$hiv.negative > 0.8, 
+lda_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_lda, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(lda_predict_rpart_0.8)
 # Create confusion matrix
@@ -1834,7 +1834,7 @@ table(lda_predict_rpart_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-lda_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_lda, type = "prob")$hiv.negative > 0.2, 
+lda_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_lda, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(lda_predict_rpart_0.2)
 # Create confusion matrix
@@ -1842,10 +1842,10 @@ table(lda_predict_rpart_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_lda_predict_rpart <- colAUC(predict(rpart_model_lda, type = "prob")$hiv.positive, 
+(roc_lda_predict_rpart <- colAUC(predict(rpart_model_lda, type = "prob")$hiv.positive,
                                  rpart_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_lda_predict_rpart <- colAUC(predict(rpart_model_lda, type = "prob")$hiv.negative, 
+# (roc_lda_predict_rpart <- colAUC(predict(rpart_model_lda, type = "prob")$hiv.negative,
 #                                        rpart_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1854,7 +1854,7 @@ table(lda_predict_rpart_0.2)
 # C4) Fit support vector machine with a radial kernel: model_svm
 set.seed(95003)
 (rpart_model_svm <- train(
-  x = dplyr::select(rpart_final, -blood.test.result), 
+  x = dplyr::select(rpart_final, -blood.test.result),
   y = rpart_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "svmRadial",
@@ -1865,9 +1865,9 @@ set.seed(95003)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-svm_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_svm, type = "prob")$hiv.negative > 0.5, 
+svm_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_svm, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
-# OR 
+# OR
 # svm_predict_rpart_0.5 <- predict(rpart_model_svm) # DEFAULT type = "raw"
 table(svm_predict_rpart_0.5)
 # Create confusion matrix
@@ -1875,7 +1875,7 @@ table(svm_predict_rpart_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-svm_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_svm, type = "prob")$hiv.negative > 0.8, 
+svm_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_svm, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(svm_predict_rpart_0.8)
 # Create confusion matrix
@@ -1883,7 +1883,7 @@ table(svm_predict_rpart_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-svm_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_svm, type = "prob")$hiv.negative > 0.2, 
+svm_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_svm, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(svm_predict_rpart_0.2)
 # Create confusion matrix
@@ -1891,10 +1891,10 @@ table(svm_predict_rpart_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_svm_predict_rpart <- colAUC(predict(rpart_model_svm, type = "prob")$hiv.positive, 
+(roc_svm_predict_rpart <- colAUC(predict(rpart_model_svm, type = "prob")$hiv.positive,
                                  rpart_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_svm_predict_rpart <- colAUC(predict(rpart_model_svm, type = "prob")$hiv.negative, 
+# (roc_svm_predict_rpart <- colAUC(predict(rpart_model_svm, type = "prob")$hiv.negative,
 #                                        rpart_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1911,7 +1911,7 @@ plot(rpart_model_svm)
 # C5) Fit extreme gradient boosting: model_xgboost
 set.seed(95004)
 (rpart_model_xgboost <- train(
-  x = dplyr::select(rpart_final, -blood.test.result), 
+  x = dplyr::select(rpart_final, -blood.test.result),
   y = rpart_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "xgbTree",
@@ -1922,9 +1922,9 @@ set.seed(95004)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-xgboost_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_xgboost, type = "prob")$hiv.negative > 0.5, 
+xgboost_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_xgboost, type = "prob")$hiv.negative > 0.5,
                                            "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
-# OR 
+# OR
 # xgboost_predict_rpart_0.5 <- predict(rpart_model_xgboost) # DEFAULT type = "raw"
 table(xgboost_predict_rpart_0.5)
 # Create confusion matrix
@@ -1932,7 +1932,7 @@ table(xgboost_predict_rpart_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-xgboost_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_xgboost, type = "prob")$hiv.negative > 0.8, 
+xgboost_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_xgboost, type = "prob")$hiv.negative > 0.8,
                                            "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(xgboost_predict_rpart_0.8)
 # Create confusion matrix
@@ -1940,7 +1940,7 @@ table(xgboost_predict_rpart_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-xgboost_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_xgboost, type = "prob")$hiv.negative > 0.2, 
+xgboost_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_xgboost, type = "prob")$hiv.negative > 0.2,
                                            "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(xgboost_predict_rpart_0.2)
 # Create confusion matrix
@@ -1948,10 +1948,10 @@ table(xgboost_predict_rpart_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_xgboost_predict_rpart <- colAUC(predict(rpart_model_xgboost, type = "prob")$hiv.positive, 
+(roc_xgboost_predict_rpart <- colAUC(predict(rpart_model_xgboost, type = "prob")$hiv.positive,
                                      rpart_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_xgboost_predict_rpart <- colAUC(predict(rpart_model_xgboost, type = "prob")$hiv.negative, 
+# (roc_xgboost_predict_rpart <- colAUC(predict(rpart_model_xgboost, type = "prob")$hiv.negative,
 #                                        rpart_final$blood.test.result, plotROC = TRUE))
 
 
@@ -1961,7 +1961,7 @@ plot(rpart_model_xgboost)
 ## Tuning parameter 'gamma' was held constant at a value of 0.
 ## Tuning parameter 'min_child_weight' was held constant at a value of 1.
 ## ROC was used to select the optimal model using the largest value.
-## The final values used for the model were nrounds = 100, max_depth = 3, eta = 0.3, gamma = 0, colsample_bytree = 0.6, 
+## The final values used for the model were nrounds = 100, max_depth = 3, eta = 0.3, gamma = 0, colsample_bytree = 0.6,
 ## min_child_weight = 1 and subsample = 1.
 
 
@@ -1981,9 +1981,9 @@ set.seed(95005)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-nb_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_nb, type = "prob")$hiv.negative > 0.5, 
+nb_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_nb, type = "prob")$hiv.negative > 0.5,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
-# OR 
+# OR
 # nb_predict_rpart_0.5 <- predict(rpart_model_nb) # DEFAULT type = "raw"
 table(nb_predict_rpart_0.5)
 # Create confusion matrix
@@ -1991,7 +1991,7 @@ table(nb_predict_rpart_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-nb_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_nb, type = "prob")$hiv.negative > 0.8, 
+nb_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_nb, type = "prob")$hiv.negative > 0.8,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(nb_predict_rpart_0.8)
 # Create confusion matrix
@@ -1999,7 +1999,7 @@ table(nb_predict_rpart_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-nb_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_nb, type = "prob")$hiv.negative > 0.2, 
+nb_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_nb, type = "prob")$hiv.negative > 0.2,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(nb_predict_rpart_0.2)
 # Create confusion matrix
@@ -2007,10 +2007,10 @@ table(nb_predict_rpart_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_nb_predict_rpart <- colAUC(predict(rpart_model_nb, type = "prob")$hiv.positive, 
+(roc_nb_predict_rpart <- colAUC(predict(rpart_model_nb, type = "prob")$hiv.positive,
                                 rpart_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_nb_predict_rpart <- colAUC(predict(rpart_model_nb, type = "prob")$hiv.negative, 
+# (roc_nb_predict_rpart <- colAUC(predict(rpart_model_nb, type = "prob")$hiv.negative,
 #                                        rpart_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2039,9 +2039,9 @@ set.seed(95006)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-knn_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_knn, type = "prob")$hiv.negative > 0.5, 
+knn_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_knn, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
-# OR 
+# OR
 # knn_predict_rpart_0.5 <- predict(rpart_model_knn) # DEFAULT type = "raw"
 table(knn_predict_rpart_0.5)
 # Create confusion matrix
@@ -2049,7 +2049,7 @@ table(knn_predict_rpart_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-knn_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_knn, type = "prob")$hiv.negative > 0.8, 
+knn_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_knn, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(knn_predict_rpart_0.8)
 # Create confusion matrix
@@ -2057,7 +2057,7 @@ table(knn_predict_rpart_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-knn_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_knn, type = "prob")$hiv.negative > 0.2, 
+knn_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_knn, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(knn_predict_rpart_0.2)
 # Create confusion matrix
@@ -2065,10 +2065,10 @@ table(knn_predict_rpart_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_knn_predict_rpart <- colAUC(predict(rpart_model_knn, type = "prob")$hiv.positive, 
+(roc_knn_predict_rpart <- colAUC(predict(rpart_model_knn, type = "prob")$hiv.positive,
                                  rpart_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_knn_predict_rpart <- colAUC(predict(rpart_model_knn, type = "prob")$hiv.negative, 
+# (roc_knn_predict_rpart <- colAUC(predict(rpart_model_knn, type = "prob")$hiv.negative,
 #                                        rpart_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2100,9 +2100,9 @@ set.seed(95007)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-nn_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_nn, type = "prob")$hiv.negative > 0.5, 
+nn_predict_rpart_0.5 <- factor(ifelse(predict(rpart_model_nn, type = "prob")$hiv.negative > 0.5,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
-# OR 
+# OR
 # nn_predict_rpart_0.5 <- predict(rpart_model_nn) # DEFAULT type = "raw"
 table(nn_predict_rpart_0.5)
 # Create confusion matrix
@@ -2110,7 +2110,7 @@ table(nn_predict_rpart_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-nn_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_nn, type = "prob")$hiv.negative > 0.8, 
+nn_predict_rpart_0.8 <- factor(ifelse(predict(rpart_model_nn, type = "prob")$hiv.negative > 0.8,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(nn_predict_rpart_0.8)
 # Create confusion matrix
@@ -2118,7 +2118,7 @@ table(nn_predict_rpart_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-nn_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_nn, type = "prob")$hiv.negative > 0.2, 
+nn_predict_rpart_0.2 <- factor(ifelse(predict(rpart_model_nn, type = "prob")$hiv.negative > 0.2,
                                       "hiv.negative", "hiv.positive"), levels = levels(rpart_final$blood.test.result))
 table(nn_predict_rpart_0.2)
 # Create confusion matrix
@@ -2126,10 +2126,10 @@ table(nn_predict_rpart_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_nn_predict_rpart <- colAUC(predict(rpart_model_nn, type = "prob")$hiv.positive, 
+(roc_nn_predict_rpart <- colAUC(predict(rpart_model_nn, type = "prob")$hiv.positive,
                                 rpart_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_nn_predict_rpart <- colAUC(predict(rpart_model_nn, type = "prob")$hiv.negative, 
+# (roc_nn_predict_rpart <- colAUC(predict(rpart_model_nn, type = "prob")$hiv.negative,
 #                                        rpart_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2173,7 +2173,7 @@ table(chi_sq_final$blood.test.result[myFolds_chi_sq$Fold5]) / length(myFolds_chi
 # D1) Fit elastic net model: model_glmnet
 set.seed(950000)
 (chi_sq_model_glmnet <- train(
-  x = dplyr::select(chi_sq_final, -blood.test.result), 
+  x = dplyr::select(chi_sq_final, -blood.test.result),
   y = chi_sq_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "glmnet",
@@ -2191,9 +2191,9 @@ set.seed(950000)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-glmnet_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_glmnet, type = "prob")$hiv.negative > 0.5, 
+glmnet_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_glmnet, type = "prob")$hiv.negative > 0.5,
                                            "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
-# OR 
+# OR
 # glmnet_predict_chi_sq_0.5 <- predict(chi_sq_model_glmnet) # DEFAULT type = "raw"
 table(glmnet_predict_chi_sq_0.5)
 # Create confusion matrix
@@ -2201,7 +2201,7 @@ table(glmnet_predict_chi_sq_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-glmnet_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_glmnet, type = "prob")$hiv.negative > 0.8, 
+glmnet_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_glmnet, type = "prob")$hiv.negative > 0.8,
                                            "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(glmnet_predict_chi_sq_0.8)
 # Create confusion matrix
@@ -2209,7 +2209,7 @@ table(glmnet_predict_chi_sq_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-glmnet_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_glmnet, type = "prob")$hiv.negative > 0.2, 
+glmnet_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_glmnet, type = "prob")$hiv.negative > 0.2,
                                            "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(glmnet_predict_chi_sq_0.2)
 # Create confusion matrix
@@ -2217,21 +2217,21 @@ table(glmnet_predict_chi_sq_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_glmnet_predict_chi_sq <- colAUC(predict(chi_sq_model_glmnet, type = "prob")$hiv.positive, 
+(roc_glmnet_predict_chi_sq <- colAUC(predict(chi_sq_model_glmnet, type = "prob")$hiv.positive,
                                      chi_sq_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_glmnet_predict_chi_sq <- colAUC(predict(chi_sq_model_glmnet, type = "prob")$hiv.negative, 
+# (roc_glmnet_predict_chi_sq <- colAUC(predict(chi_sq_model_glmnet, type = "prob")$hiv.negative,
 #                                        chi_sq_final$blood.test.result, plotROC = TRUE))
 
 
 
-### NOTES: 
+### NOTES:
 ### Lasso regression (1): penalizes number of non-zero coefficients [number]
 ### Ridge regression (0): penalizes absolute magnitude of coefficients [size]
-### 'glmnet' is the combination of lasso and ridge regression where: 
+### 'glmnet' is the combination of lasso and ridge regression where:
 ### alpha = 0 is pure ridge regression, alpha = 1 is pure lasso regression [Mixing Percentage]
 ### lambda is the size of the penalty [Regularization Parameter]
-### 
+###
 
 # to observe the hyperparameters tuned (grid search/tuning grid)
 plot(chi_sq_model_glmnet)
@@ -2241,8 +2241,8 @@ plot(chi_sq_model_glmnet)
 # to observe the full regularization path for all of the models with alpha = 0 [pure ridge]
 ## Left: intercept only model (high value of lambda)
 ## Right: full model with no penalty (low value of lambda)
-### The plot shows how the regression coefficients are "shrunk" from right to left as we increase the strength of the penalty 
-### on coefficient size, and therefore decrease the complexity of the model. 
+### The plot shows how the regression coefficients are "shrunk" from right to left as we increase the strength of the penalty
+### on coefficient size, and therefore decrease the complexity of the model.
 ### We can also see some lines hitting zero as we increase lambda, which represents these coefficients dropping out of the model.
 plot(chi_sq_model_glmnet$finalModel)
 
@@ -2252,7 +2252,7 @@ plot(chi_sq_model_glmnet$finalModel)
 # D2) Fit random forest: model_rf
 set.seed(950001)
 (chi_sq_model_rf <- train(
-  x = dplyr::select(chi_sq_final, -blood.test.result), 
+  x = dplyr::select(chi_sq_final, -blood.test.result),
   y = chi_sq_final$blood.test.result,
   tuneLength = 5, # the maximum number of tuning parameter combinations that will be generated by the random search
   metric = "ROC", # AUC as the evaluation metric
@@ -2264,9 +2264,9 @@ set.seed(950001)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-rf_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_rf, type = "prob")$hiv.negative > 0.5, 
+rf_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_rf, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
-# OR 
+# OR
 # rf_predict_chi_sq_0.5 <- predict(chi_sq_model_rf) # DEFAULT type = "raw"
 table(rf_predict_chi_sq_0.5)
 # Create confusion matrix
@@ -2274,7 +2274,7 @@ table(rf_predict_chi_sq_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-rf_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_rf, type = "prob")$hiv.negative > 0.8, 
+rf_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_rf, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(rf_predict_chi_sq_0.8)
 # Create confusion matrix
@@ -2282,7 +2282,7 @@ table(rf_predict_chi_sq_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-rf_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_rf, type = "prob")$hiv.negative > 0.2, 
+rf_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_rf, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(rf_predict_chi_sq_0.2)
 # Create confusion matrix
@@ -2290,10 +2290,10 @@ table(rf_predict_chi_sq_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_rf_predict_chi_sq <- colAUC(predict(chi_sq_model_rf, type = "prob")$hiv.positive, 
+(roc_rf_predict_chi_sq <- colAUC(predict(chi_sq_model_rf, type = "prob")$hiv.positive,
                                  chi_sq_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_rf_predict_chi_sq <- colAUC(predict(chi_sq_model_rf, type = "prob")$hiv.negative, 
+# (roc_rf_predict_chi_sq <- colAUC(predict(chi_sq_model_rf, type = "prob")$hiv.negative,
 #                                        chi_sq_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2310,7 +2310,7 @@ plot(chi_sq_model_rf)
 # D3) Fit linear discriminant analysis: model_lda
 set.seed(950002)
 (chi_sq_model_lda <- train(
-  x = dplyr::select(chi_sq_final, -blood.test.result), 
+  x = dplyr::select(chi_sq_final, -blood.test.result),
   y = chi_sq_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "lda",
@@ -2321,9 +2321,9 @@ set.seed(950002)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-lda_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_lda, type = "prob")$hiv.negative > 0.5, 
+lda_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_lda, type = "prob")$hiv.negative > 0.5,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
-# OR 
+# OR
 # lda_predict_chi_sq_0.5 <- predict(chi_sq_model_lda) # DEFAULT type = "raw"
 table(lda_predict_chi_sq_0.5)
 # Create confusion matrix
@@ -2331,7 +2331,7 @@ table(lda_predict_chi_sq_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-lda_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_lda, type = "prob")$hiv.negative > 0.8, 
+lda_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_lda, type = "prob")$hiv.negative > 0.8,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(lda_predict_chi_sq_0.8)
 # Create confusion matrix
@@ -2339,7 +2339,7 @@ table(lda_predict_chi_sq_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-lda_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_lda, type = "prob")$hiv.negative > 0.2, 
+lda_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_lda, type = "prob")$hiv.negative > 0.2,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(lda_predict_chi_sq_0.2)
 # Create confusion matrix
@@ -2347,10 +2347,10 @@ table(lda_predict_chi_sq_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_lda_predict_chi_sq <- colAUC(predict(chi_sq_model_lda, type = "prob")$hiv.positive, 
+(roc_lda_predict_chi_sq <- colAUC(predict(chi_sq_model_lda, type = "prob")$hiv.positive,
                                   chi_sq_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_lda_predict_chi_sq <- colAUC(predict(chi_sq_model_lda, type = "prob")$hiv.negative, 
+# (roc_lda_predict_chi_sq <- colAUC(predict(chi_sq_model_lda, type = "prob")$hiv.negative,
 #                                        chi_sq_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2359,7 +2359,7 @@ table(lda_predict_chi_sq_0.2)
 # D4) Fit support vector machine with a radial kernel: model_svm
 set.seed(950003)
 (chi_sq_model_svm <- train(
-  x = dplyr::select(chi_sq_final, -blood.test.result), 
+  x = dplyr::select(chi_sq_final, -blood.test.result),
   y = chi_sq_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "svmRadial",
@@ -2370,9 +2370,9 @@ set.seed(950003)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-svm_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_svm, type = "prob")$hiv.negative > 0.5, 
+svm_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_svm, type = "prob")$hiv.negative > 0.5,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
-# OR 
+# OR
 # svm_predict_chi_sq_0.5 <- predict(chi_sq_model_svm) # DEFAULT type = "raw"
 table(svm_predict_chi_sq_0.5)
 # Create confusion matrix
@@ -2380,7 +2380,7 @@ table(svm_predict_chi_sq_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-svm_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_svm, type = "prob")$hiv.negative > 0.8, 
+svm_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_svm, type = "prob")$hiv.negative > 0.8,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(svm_predict_chi_sq_0.8)
 # Create confusion matrix
@@ -2388,7 +2388,7 @@ table(svm_predict_chi_sq_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-svm_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_svm, type = "prob")$hiv.negative > 0.2, 
+svm_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_svm, type = "prob")$hiv.negative > 0.2,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(svm_predict_chi_sq_0.2)
 # Create confusion matrix
@@ -2396,10 +2396,10 @@ table(svm_predict_chi_sq_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_svm_predict_chi_sq <- colAUC(predict(chi_sq_model_svm, type = "prob")$hiv.positive, 
+(roc_svm_predict_chi_sq <- colAUC(predict(chi_sq_model_svm, type = "prob")$hiv.positive,
                                   chi_sq_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_svm_predict_chi_sq <- colAUC(predict(chi_sq_model_svm, type = "prob")$hiv.negative, 
+# (roc_svm_predict_chi_sq <- colAUC(predict(chi_sq_model_svm, type = "prob")$hiv.negative,
 #                                        chi_sq_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2416,7 +2416,7 @@ plot(chi_sq_model_svm)
 # D5) Fit extreme gradient boosting: model_xgboost
 set.seed(950004)
 (chi_sq_model_xgboost <- train(
-  x = dplyr::select(chi_sq_final, -blood.test.result), 
+  x = dplyr::select(chi_sq_final, -blood.test.result),
   y = chi_sq_final$blood.test.result,
   metric = "ROC", # AUC as the evaluation metric
   method = "xgbTree",
@@ -2427,9 +2427,9 @@ set.seed(950004)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-xgboost_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_xgboost, type = "prob")$hiv.negative > 0.5, 
+xgboost_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_xgboost, type = "prob")$hiv.negative > 0.5,
                                             "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
-# OR 
+# OR
 # xgboost_predict_chi_sq_0.5 <- predict(chi_sq_model_xgboost) # DEFAULT type = "raw"
 table(xgboost_predict_chi_sq_0.5)
 # Create confusion matrix
@@ -2437,7 +2437,7 @@ table(xgboost_predict_chi_sq_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-xgboost_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_xgboost, type = "prob")$hiv.negative > 0.8, 
+xgboost_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_xgboost, type = "prob")$hiv.negative > 0.8,
                                             "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(xgboost_predict_chi_sq_0.8)
 # Create confusion matrix
@@ -2445,7 +2445,7 @@ table(xgboost_predict_chi_sq_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-xgboost_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_xgboost, type = "prob")$hiv.negative > 0.2, 
+xgboost_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_xgboost, type = "prob")$hiv.negative > 0.2,
                                             "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(xgboost_predict_chi_sq_0.2)
 # Create confusion matrix
@@ -2453,10 +2453,10 @@ table(xgboost_predict_chi_sq_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_xgboost_predict_chi_sq <- colAUC(predict(chi_sq_model_xgboost, type = "prob")$hiv.positive, 
+(roc_xgboost_predict_chi_sq <- colAUC(predict(chi_sq_model_xgboost, type = "prob")$hiv.positive,
                                       chi_sq_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_xgboost_predict_chi_sq <- colAUC(predict(chi_sq_model_xgboost, type = "prob")$hiv.negative, 
+# (roc_xgboost_predict_chi_sq <- colAUC(predict(chi_sq_model_xgboost, type = "prob")$hiv.negative,
 #                                        chi_sq_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2466,7 +2466,7 @@ plot(chi_sq_model_xgboost)
 ## Tuning parameter 'gamma' was held constant at a value of 0.
 ## Tuning parameter 'min_child_weight' was held constant at a value of 1.
 ## ROC was used to select the optimal model using the largest value.
-## The final values used for the model were nrounds = 100, max_depth = 3, eta = 0.3, gamma = 0, colsample_bytree = 0.6, 
+## The final values used for the model were nrounds = 100, max_depth = 3, eta = 0.3, gamma = 0, colsample_bytree = 0.6,
 ## min_child_weight = 1 and subsample = 0.75.
 
 
@@ -2478,8 +2478,8 @@ plot(chi_sq_model_xgboost)
 # find("select")
 set.seed(950005)
 (chi_sq_model_nb <- train(
-  ## OR 
-  ## x = dplyr::select(chi_sq_final, -blood.test.result), 
+  ## OR
+  ## x = dplyr::select(chi_sq_final, -blood.test.result),
   ## y = chi_sq_final$blood.test.result,
   blood.test.result ~ .,
   data = chi_sq_final,
@@ -2492,9 +2492,9 @@ set.seed(950005)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-nb_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_nb, type = "prob")$hiv.negative > 0.5, 
+nb_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_nb, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
-# OR 
+# OR
 # nb_predict_chi_sq_0.5 <- predict(chi_sq_model_nb) # DEFAULT type = "raw"
 table(nb_predict_chi_sq_0.5)
 # Create confusion matrix
@@ -2502,7 +2502,7 @@ table(nb_predict_chi_sq_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-nb_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_nb, type = "prob")$hiv.negative > 0.8, 
+nb_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_nb, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(nb_predict_chi_sq_0.8)
 # Create confusion matrix
@@ -2510,7 +2510,7 @@ table(nb_predict_chi_sq_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-nb_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_nb, type = "prob")$hiv.negative > 0.2, 
+nb_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_nb, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(nb_predict_chi_sq_0.2)
 # Create confusion matrix
@@ -2518,10 +2518,10 @@ table(nb_predict_chi_sq_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_nb_predict_chi_sq <- colAUC(predict(chi_sq_model_nb, type = "prob")$hiv.positive, 
+(roc_nb_predict_chi_sq <- colAUC(predict(chi_sq_model_nb, type = "prob")$hiv.positive,
                                  chi_sq_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_nb_predict_chi_sq <- colAUC(predict(chi_sq_model_nb, type = "prob")$hiv.negative, 
+# (roc_nb_predict_chi_sq <- colAUC(predict(chi_sq_model_nb, type = "prob")$hiv.negative,
 #                                        chi_sq_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2550,9 +2550,9 @@ set.seed(950006)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-knn_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_knn, type = "prob")$hiv.negative > 0.5, 
+knn_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_knn, type = "prob")$hiv.negative > 0.5,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
-# OR 
+# OR
 # knn_predict_chi_sq_0.5 <- predict(chi_sq_model_knn) # DEFAULT type = "raw"
 table(knn_predict_chi_sq_0.5)
 # Create confusion matrix
@@ -2560,7 +2560,7 @@ table(knn_predict_chi_sq_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-knn_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_knn, type = "prob")$hiv.negative > 0.8, 
+knn_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_knn, type = "prob")$hiv.negative > 0.8,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(knn_predict_chi_sq_0.8)
 # Create confusion matrix
@@ -2568,7 +2568,7 @@ table(knn_predict_chi_sq_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-knn_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_knn, type = "prob")$hiv.negative > 0.2, 
+knn_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_knn, type = "prob")$hiv.negative > 0.2,
                                         "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(knn_predict_chi_sq_0.2)
 # Create confusion matrix
@@ -2576,10 +2576,10 @@ table(knn_predict_chi_sq_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_knn_predict_chi_sq <- colAUC(predict(chi_sq_model_knn, type = "prob")$hiv.positive, 
+(roc_knn_predict_chi_sq <- colAUC(predict(chi_sq_model_knn, type = "prob")$hiv.positive,
                                   chi_sq_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_knn_predict_chi_sq <- colAUC(predict(chi_sq_model_knn, type = "prob")$hiv.negative, 
+# (roc_knn_predict_chi_sq <- colAUC(predict(chi_sq_model_knn, type = "prob")$hiv.negative,
 #                                        chi_sq_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2611,9 +2611,9 @@ set.seed(950007)
 
 ### a) THRESHOLD: 0.5
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.5, "hiv.negative" else "hiv.positive"
-nn_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_nn, type = "prob")$hiv.negative > 0.5, 
+nn_predict_chi_sq_0.5 <- factor(ifelse(predict(chi_sq_model_nn, type = "prob")$hiv.negative > 0.5,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
-# OR 
+# OR
 # nn_predict_chi_sq_0.5 <- predict(chi_sq_model_nn) # DEFAULT type = "raw"
 table(nn_predict_chi_sq_0.5)
 # Create confusion matrix
@@ -2621,7 +2621,7 @@ table(nn_predict_chi_sq_0.5)
 
 ### b) THRESHOLD: 0.8 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.8, "hiv.negative" else "hiv.positive"
-nn_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_nn, type = "prob")$hiv.negative > 0.8, 
+nn_predict_chi_sq_0.8 <- factor(ifelse(predict(chi_sq_model_nn, type = "prob")$hiv.negative > 0.8,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(nn_predict_chi_sq_0.8)
 # Create confusion matrix
@@ -2629,7 +2629,7 @@ table(nn_predict_chi_sq_0.8)
 
 ### c) THRESHOLD: 0.2 (trying another threshold)
 # If probabilities of predictions (for "hiv negative") exceed threshold of 0.2, "hiv.negative" else "hiv.positive"
-nn_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_nn, type = "prob")$hiv.negative > 0.2, 
+nn_predict_chi_sq_0.2 <- factor(ifelse(predict(chi_sq_model_nn, type = "prob")$hiv.negative > 0.2,
                                        "hiv.negative", "hiv.positive"), levels = levels(chi_sq_final$blood.test.result))
 table(nn_predict_chi_sq_0.2)
 # Create confusion matrix
@@ -2637,10 +2637,10 @@ table(nn_predict_chi_sq_0.2)
 
 
 # Make ROC curve <hiv.positive>
-(roc_nn_predict_chi_sq <- colAUC(predict(chi_sq_model_nn, type = "prob")$hiv.positive, 
+(roc_nn_predict_chi_sq <- colAUC(predict(chi_sq_model_nn, type = "prob")$hiv.positive,
                                  chi_sq_final$blood.test.result, plotROC = TRUE))
 # OR (either): yields the same ROC curve <hiv.negative>
-# (roc_nn_predict_chi_sq <- colAUC(predict(chi_sq_model_nn, type = "prob")$hiv.negative, 
+# (roc_nn_predict_chi_sq <- colAUC(predict(chi_sq_model_nn, type = "prob")$hiv.negative,
 #                                        chi_sq_final$blood.test.result, plotROC = TRUE))
 
 
@@ -2655,11 +2655,11 @@ plot(chi_sq_model_nn)
 ##########################################################################################################################################################
 
 # COMPARISON OF MODELS
-## 1. Among STEPWISE: 
+## 1. Among STEPWISE:
 
 # Create model_list
-model_list_stepwise <- list(glmnet = stepwise_model_glmnet, rf = stepwise_model_rf, lda = stepwise_model_lda, 
-                            svm = stepwise_model_svm, xgboost = stepwise_model_xgboost, nb = stepwise_model_nb, 
+model_list_stepwise <- list(glmnet = stepwise_model_glmnet, rf = stepwise_model_rf, lda = stepwise_model_lda,
+                            svm = stepwise_model_svm, xgboost = stepwise_model_xgboost, nb = stepwise_model_nb,
                             knn = stepwise_model_knn, nn = stepwise_model_nn)
 # Pass model_list to resamples(): resamples
 (resamples_stepwise <- resamples(model_list_stepwise))
@@ -2681,11 +2681,11 @@ dotplot(resamples_stepwise, metric = "ROC")
 print(stepwise_model_rf) # Random Forest algorithm performs the best
 
 
-## 2. Among BORUTA: 
+## 2. Among BORUTA:
 
 # Create model_list
-model_list_boruta <- list(glmnet = boruta_model_glmnet, rf = boruta_model_rf, lda = boruta_model_lda, 
-                          svm = boruta_model_svm, xgboost = boruta_model_xgboost, nb = boruta_model_nb, 
+model_list_boruta <- list(glmnet = boruta_model_glmnet, rf = boruta_model_rf, lda = boruta_model_lda,
+                          svm = boruta_model_svm, xgboost = boruta_model_xgboost, nb = boruta_model_nb,
                           knn = boruta_model_knn, nn = boruta_model_nn)
 # Pass model_list to resamples(): resamples
 (resamples_boruta <- resamples(model_list_boruta))
@@ -2707,11 +2707,11 @@ dotplot(resamples_boruta, metric = "ROC")
 print(boruta_model_rf) # Random Forest algorithm performs the best
 
 
-## 3. Among RPART: 
+## 3. Among RPART:
 
 # Create model_list
-model_list_rpart <- list(glmnet = rpart_model_glmnet, rf = rpart_model_rf, lda = rpart_model_lda, 
-                         svm = rpart_model_svm, xgboost = rpart_model_xgboost, nb = rpart_model_nb, 
+model_list_rpart <- list(glmnet = rpart_model_glmnet, rf = rpart_model_rf, lda = rpart_model_lda,
+                         svm = rpart_model_svm, xgboost = rpart_model_xgboost, nb = rpart_model_nb,
                          knn = rpart_model_knn, nn = rpart_model_nn)
 # Pass model_list to resamples(): resamples
 (resamples_rpart <- resamples(model_list_rpart))
@@ -2733,11 +2733,11 @@ dotplot(resamples_rpart, metric = "ROC")
 print(rpart_model_xgboost) # Extreme Gradient Boosting algorithm performs the best
 
 
-## 4. Among CHI_SQ: 
+## 4. Among CHI_SQ:
 
 # Create model_list
-model_list_chi_sq <- list(glmnet = chi_sq_model_glmnet, rf = chi_sq_model_rf, lda = chi_sq_model_lda, 
-                          svm = chi_sq_model_svm, xgboost = chi_sq_model_xgboost, nb = chi_sq_model_nb, 
+model_list_chi_sq <- list(glmnet = chi_sq_model_glmnet, rf = chi_sq_model_rf, lda = chi_sq_model_lda,
+                          svm = chi_sq_model_svm, xgboost = chi_sq_model_xgboost, nb = chi_sq_model_nb,
                           knn = chi_sq_model_knn, nn = chi_sq_model_nn)
 # Pass model_list to resamples(): resamples
 (resamples_chi_sq <- resamples(model_list_chi_sq))
@@ -2759,11 +2759,11 @@ dotplot(resamples_chi_sq, metric = "ROC")
 print(chi_sq_model_xgboost) # Extreme Gradient Boosting algorithm performs the best
 
 
-# 5) Comparisons of the final TOP 4 models from each feature selection technique: <rf_stepwise> OR <rf_boruta> 
-# OR <xgboost_rpart> or <xgboost_chi_sq>: 
+# 5) Comparisons of the final TOP 4 models from each feature selection technique: <rf_stepwise> OR <rf_boruta>
+# OR <xgboost_rpart> or <xgboost_chi_sq>:
 
 # Create model_list
-model_list_final <- list(rf_stepwise = stepwise_model_rf, rf_boruta = boruta_model_rf, 
+model_list_final <- list(rf_stepwise = stepwise_model_rf, rf_boruta = boruta_model_rf,
                          xgboost_rpart = rpart_model_xgboost, xgboost_chi_sq = chi_sq_model_xgboost)
 # Pass model_list to resamples(): resamples
 (resamples_final <- resamples(model_list_final))
@@ -2784,7 +2784,7 @@ dotplot(resamples_final, metric = "ROC")
 # Print the BEST MODEL [among ALL the feature selection methods]
 print(stepwise_model_rf)
 
-### CONCLUSION: Between <rf_stepwise> and <rf_boruta>, the algorithm/model that yields (i) the higher median of AUC and 
+### CONCLUSION: Between <rf_stepwise> and <rf_boruta>, the algorithm/model that yields (i) the higher median of AUC and
 # (ii) smaller interquartile range/range of AUC is chosen/preferred (<rf_stepwise> performs the best!)
 # Therefore, RANDOM FOREST algorithm using STEPWISE REGRESSION feature selection method performs the BEST on the overall dataset.
 
@@ -2792,11 +2792,11 @@ print(stepwise_model_rf)
 
 # Recall again the features used in the STEPWISE data
 colnames(stepwise_final)
-# Applying/testing the BEST model {stepwise_model_rf} on other countries HIV dataset to evaluate its performance 
+# Applying/testing the BEST model {stepwise_model_rf} on other countries HIV dataset to evaluate its performance
 # based on AUC (Area under the ROC [Receiver Operating Characteristic] Curve)
 
 
-### Extract datasets from the 3 countries - 
+### Extract datasets from the 3 countries -
 ## Malawi (MW) - Year 2015 - 2016 (same as Angola)
 # AR - HIV Test Result
 malawi_hiv <- read_dta("/Users/kjyuaan8/Desktop/Year 3 Sem 1/WIH3001 DSP/Implementation/MWAR7AFL.DTA")
@@ -2842,11 +2842,11 @@ malawi_women_selected_factor <- dplyr::select(malawi_women_factor, v001, v002, v
 
 ## Merging / joining both the data
 # Base file [unit of analysis] --> <malawi_hiv_factor> file
-final_dataset_factor_malawi <- right_join(malawi_women_selected_factor, malawi_hiv_factor, 
-                                          by = c("v001" = "hivclust", 
-                                                 "v002" = "hivnumb", 
-                                                 "v003" = "hivline"), 
-                                          keep = FALSE, 
+final_dataset_factor_malawi <- right_join(malawi_women_selected_factor, malawi_hiv_factor,
+                                          by = c("v001" = "hivclust",
+                                                 "v002" = "hivnumb",
+                                                 "v003" = "hivline"),
+                                          keep = FALSE,
                                           na_matches = "never")
 # drop the 3 matching variables/columns (with <keep = FALSE>) for encoding purposes (carry no importance weightage)
 final_dataset_factor_malawi <- dplyr::select(final_dataset_factor_malawi, -c(v001, v002, v003))
@@ -2856,7 +2856,7 @@ final_dataset_factor_malawi_label <- as.character(labelled::var_label(final_data
 final_dataset_malawi <- final_dataset_factor_malawi
 colnames(final_dataset_malawi) <- final_dataset_factor_malawi_label
 
-## ------------------------------------------------------------------------------------------------------------------------------------- ## 
+## ------------------------------------------------------------------------------------------------------------------------------------- ##
 
 # ### Data Pre-Processing Steps
 # There are duplicated column names! MAKE THEM UNIQUE!!!
@@ -2864,7 +2864,7 @@ names(final_dataset_malawi) <- make.names(names(final_dataset_malawi), unique = 
 colnames(final_dataset_malawi)
 
 ## Important STEP!!! {feature selection/feature engineering}
-# Removing na (not applicable) variables - column names starting with "na" / 
+# Removing na (not applicable) variables - column names starting with "na" /
 # questions that are no longer part of the DHS VII core questionnaire from the final_dataset_malawi
 malawi_fdr_1 <- dplyr::select(final_dataset_malawi, -starts_with("na."))
 
@@ -2872,21 +2872,21 @@ malawi_fdr_1 <- dplyr::select(final_dataset_malawi, -starts_with("na."))
 malawi_ih_1 <- which(colnames(malawi_fdr_1) == "sought.sti.advice.treatment.from..government.hospital")
 malawi_ih_2 <- which(colnames(malawi_fdr_1) == "sought.sti.advice.treatment.from..other")
 # convert factor to character
-malawi_fdr_1[malawi_ih_1:malawi_ih_2] <- lapply(malawi_fdr_1[malawi_ih_1:malawi_ih_2], 
+malawi_fdr_1[malawi_ih_1:malawi_ih_2] <- lapply(malawi_fdr_1[malawi_ih_1:malawi_ih_2],
                                                 as.character)
 malawi_fdr_1 <- malawi_fdr_1 %>% mutate_at(seq(malawi_ih_1, malawi_ih_2), ~replace_na(., "no"))
 # convert character back to factor
-malawi_fdr_1[malawi_ih_1:malawi_ih_2] <- lapply(malawi_fdr_1[malawi_ih_1:malawi_ih_2], 
+malawi_fdr_1[malawi_ih_1:malawi_ih_2] <- lapply(malawi_fdr_1[malawi_ih_1:malawi_ih_2],
                                                 as.factor)
 
 malawi_ih_3 <- which(colnames(malawi_fdr_1) == "place.for.hiv.test..government.hospital")
 malawi_ih_4 <- which(colnames(malawi_fdr_1) == "place.for.hiv.test..other")
 # convert factor to character
-malawi_fdr_1[malawi_ih_3:malawi_ih_4] <- lapply(malawi_fdr_1[malawi_ih_3:malawi_ih_4], 
+malawi_fdr_1[malawi_ih_3:malawi_ih_4] <- lapply(malawi_fdr_1[malawi_ih_3:malawi_ih_4],
                                                 as.character)
 malawi_fdr_1 <- malawi_fdr_1 %>% mutate_at(seq(malawi_ih_3, malawi_ih_4), ~replace_na(., "no"))
 # convert character back to factor
-malawi_fdr_1[malawi_ih_3:malawi_ih_4] <- lapply(malawi_fdr_1[malawi_ih_3:malawi_ih_4], 
+malawi_fdr_1[malawi_ih_3:malawi_ih_4] <- lapply(malawi_fdr_1[malawi_ih_3:malawi_ih_4],
                                                 as.factor)
 
 sapply(malawi_fdr_1, attr, "levels") # to see factors/levels of the latest variables
@@ -2901,8 +2901,8 @@ glimpse(malawi_fdr_1)
 malawi_fdr_2 <- dplyr::select(malawi_fdr_1, -bar.code, -lab.number)
 malawi_fdr_2["blood.test.result"] <- lapply(malawi_fdr_2["blood.test.result"], as.character)
 # miracle -> only 4 unique values left! ("hiv negative", "hiv  positive", "inconclusive", "indeterminate")
-malawi_fdr_2["blood.test.result"][malawi_fdr_2["blood.test.result"] == "indeterminate" | 
-                                    malawi_fdr_2["blood.test.result"] == "inconclusive"] <- 
+malawi_fdr_2["blood.test.result"][malawi_fdr_2["blood.test.result"] == "indeterminate" |
+                                    malawi_fdr_2["blood.test.result"] == "inconclusive"] <-
   "hiv negative"
 malawi_fdr_2["blood.test.result"][malawi_fdr_2["blood.test.result"] == "hiv  positive"] <- "hiv positive"
 # back to factor
@@ -2912,7 +2912,7 @@ sapply(malawi_fdr_2, attr, "levels") # to see factors/levels of the latest varia
 
 
 
-##### Selected variables from the FINAL MODEL: 
+##### Selected variables from the FINAL MODEL:
 wh_malawi <- malawi_fdr_2
 wh_malawi <- dplyr::select(wh_malawi, intersect(colnames(stepwise_final), colnames(wh_malawi)))
 
@@ -2945,7 +2945,7 @@ for (i in 1:length(wh_malawi)) {
 any(is.na(wh_malawi)) # to check still got any null values?
 
 ### convert categorical value into numerical
-# important 
+# important
 for (i in 1:length(wh_malawi)) {
   if (is.factor(wh_malawi[[i]])) {
     wh_malawi[[i]] <- unclass(wh_malawi[[i]])
@@ -2961,12 +2961,12 @@ str(wh_malawi)
 
 
 ########## TESTING MODEL RESULTS ON MALAWI DATASET ##########
-(cm_malawi <- confusionMatrix(factor(ifelse(predict(stepwise_model_rf, wh_malawi, type = "prob")$hiv.negative > 0.5, 
-                                            "hiv.negative", "hiv.positive"), levels = levels(wh_malawi$blood.test.result)), 
+(cm_malawi <- confusionMatrix(factor(ifelse(predict(stepwise_model_rf, wh_malawi, type = "prob")$hiv.negative > 0.5,
+                                            "hiv.negative", "hiv.positive"), levels = levels(wh_malawi$blood.test.result)),
                               wh_malawi$blood.test.result))
 ## ROC curve of prediction on new dataset (Malawi)
 # (roc_malawi <- colAUC(predict(stepwise_model_rf, wh_malawi, type = "prob")$hiv.negative, wh_malawi$blood.test.result, plotROC = TRUE))
-### Create 'roc' object 
+### Create 'roc' object
 (roc_malawi <- roc(wh_malawi$blood.test.result, predict(stepwise_model_rf, wh_malawi, type = "prob")$hiv.positive))
 # OR (roc_malawi <- roc(wh_malawi$blood.test.result, predict(stepwise_model_rf, wh_malawi, type = "prob")$hiv.negative)) # same result
 ### Plot ROC curve
@@ -3002,11 +3002,11 @@ zambia_women_selected_factor <- dplyr::select(zambia_women_factor, v001, v002, v
 
 ## Merging / joining both the data
 # Base file [unit of analysis] --> <zambia_hiv_factor> file
-final_dataset_factor_zambia <- right_join(zambia_women_selected_factor, zambia_hiv_factor, 
-                                          by = c("v001" = "hivclust", 
-                                                 "v002" = "hivnumb", 
-                                                 "v003" = "hivline"), 
-                                          keep = FALSE, 
+final_dataset_factor_zambia <- right_join(zambia_women_selected_factor, zambia_hiv_factor,
+                                          by = c("v001" = "hivclust",
+                                                 "v002" = "hivnumb",
+                                                 "v003" = "hivline"),
+                                          keep = FALSE,
                                           na_matches = "never")
 # drop the 3 matching variables/columns (with <keep = FALSE>) for encoding purposes (carry no importance weightage)
 final_dataset_factor_zambia <- dplyr::select(final_dataset_factor_zambia, -c(v001, v002, v003))
@@ -3016,7 +3016,7 @@ final_dataset_factor_zambia_label <- as.character(labelled::var_label(final_data
 final_dataset_zambia <- final_dataset_factor_zambia
 colnames(final_dataset_zambia) <- final_dataset_factor_zambia_label
 
-## ------------------------------------------------------------------------------------------------------------------------------------- ## 
+## ------------------------------------------------------------------------------------------------------------------------------------- ##
 
 # ### Data Pre-Processing Steps
 # There are duplicated column names! MAKE THEM UNIQUE!!!
@@ -3024,7 +3024,7 @@ names(final_dataset_zambia) <- make.names(names(final_dataset_zambia), unique = 
 colnames(final_dataset_zambia)
 
 ## Important STEP!!! {feature selection/feature engineering}
-# Removing na (not applicable) variables - column names starting with "na" / 
+# Removing na (not applicable) variables - column names starting with "na" /
 # questions that are no longer part of the DHS VII core questionnaire from the final_dataset_zambia
 zambia_fdr_1 <- dplyr::select(final_dataset_zambia, -starts_with("na."))
 
@@ -3032,21 +3032,21 @@ zambia_fdr_1 <- dplyr::select(final_dataset_zambia, -starts_with("na."))
 zambia_ih_1 <- which(colnames(zambia_fdr_1) == "sought.sti.advice.treatment.from..government.hospital")
 zambia_ih_2 <- which(colnames(zambia_fdr_1) == "sought.sti.advice.treatment.from..other")
 # convert factor to character
-zambia_fdr_1[zambia_ih_1:zambia_ih_2] <- lapply(zambia_fdr_1[zambia_ih_1:zambia_ih_2], 
+zambia_fdr_1[zambia_ih_1:zambia_ih_2] <- lapply(zambia_fdr_1[zambia_ih_1:zambia_ih_2],
                                                 as.character)
 zambia_fdr_1 <- zambia_fdr_1 %>% mutate_at(seq(zambia_ih_1, zambia_ih_2), ~replace_na(., "no"))
 # convert character back to factor
-zambia_fdr_1[zambia_ih_1:zambia_ih_2] <- lapply(zambia_fdr_1[zambia_ih_1:zambia_ih_2], 
+zambia_fdr_1[zambia_ih_1:zambia_ih_2] <- lapply(zambia_fdr_1[zambia_ih_1:zambia_ih_2],
                                                 as.factor)
 
 zambia_ih_3 <- which(colnames(zambia_fdr_1) == "place.for.hiv.test..government.hospital")
 zambia_ih_4 <- which(colnames(zambia_fdr_1) == "place.for.hiv.test..other")
 # convert factor to character
-zambia_fdr_1[zambia_ih_3:zambia_ih_4] <- lapply(zambia_fdr_1[zambia_ih_3:zambia_ih_4], 
+zambia_fdr_1[zambia_ih_3:zambia_ih_4] <- lapply(zambia_fdr_1[zambia_ih_3:zambia_ih_4],
                                                 as.character)
 zambia_fdr_1 <- zambia_fdr_1 %>% mutate_at(seq(zambia_ih_3, zambia_ih_4), ~replace_na(., "no"))
 # convert character back to factor
-zambia_fdr_1[zambia_ih_3:zambia_ih_4] <- lapply(zambia_fdr_1[zambia_ih_3:zambia_ih_4], 
+zambia_fdr_1[zambia_ih_3:zambia_ih_4] <- lapply(zambia_fdr_1[zambia_ih_3:zambia_ih_4],
                                                 as.factor)
 
 sapply(zambia_fdr_1, attr, "levels") # to see factors/levels of the latest variables
@@ -3062,7 +3062,7 @@ zambia_fdr_2 <- dplyr::select(zambia_fdr_1, -bar.code, -lab.number)
 zambia_fdr_2["blood.test.result"] <- lapply(zambia_fdr_2["blood.test.result"], as.character)
 # miracle -> only 4 unique values left! ("hiv negative", "hiv  positive", "inconclusive", "hiv2 positive")
 zambia_fdr_2["blood.test.result"][zambia_fdr_2["blood.test.result"] == "inconclusive"] <- "hiv negative"
-zambia_fdr_2["blood.test.result"][zambia_fdr_2["blood.test.result"] == "hiv  positive" | 
+zambia_fdr_2["blood.test.result"][zambia_fdr_2["blood.test.result"] == "hiv  positive" |
                                     zambia_fdr_2["blood.test.result"] == "hiv2 positive"] <- "hiv positive"
 # back to factor
 zambia_fdr_2["blood.test.result"] <- lapply(zambia_fdr_2["blood.test.result"], as.factor)
@@ -3071,7 +3071,7 @@ sapply(zambia_fdr_2, attr, "levels") # to see factors/levels of the latest varia
 
 
 
-##### Selected variables from the FINAL MODEL: 
+##### Selected variables from the FINAL MODEL:
 wh_zambia <- zambia_fdr_2
 wh_zambia <- dplyr::select(wh_zambia, intersect(colnames(stepwise_final), colnames(wh_zambia)))
 
@@ -3104,7 +3104,7 @@ for (i in 1:length(wh_zambia)) {
 any(is.na(wh_zambia)) # to check still got any null values?
 
 ### convert categorical value into numerical
-# important 
+# important
 for (i in 1:length(wh_zambia)) {
   if (is.factor(wh_zambia[[i]])) {
     wh_zambia[[i]] <- unclass(wh_zambia[[i]])
@@ -3120,12 +3120,12 @@ str(wh_zambia)
 
 
 ########## TESTING MODEL RESULTS ON ZAMBIA DATASET ##########
-(cm_zambia <- confusionMatrix(factor(ifelse(predict(stepwise_model_rf, wh_zambia, type = "prob")$hiv.negative > 0.5, 
-                                            "hiv.negative", "hiv.positive"), levels = levels(wh_zambia$blood.test.result)), 
+(cm_zambia <- confusionMatrix(factor(ifelse(predict(stepwise_model_rf, wh_zambia, type = "prob")$hiv.negative > 0.5,
+                                            "hiv.negative", "hiv.positive"), levels = levels(wh_zambia$blood.test.result)),
                               wh_zambia$blood.test.result))
 ## ROC curve of prediction on new dataset (Zambia)
 # (roc_zambia <- colAUC(predict(stepwise_model_rf, wh_zambia, type = "prob")$hiv.negative, wh_zambia$blood.test.result, plotROC = TRUE))
-### Create 'roc' object 
+### Create 'roc' object
 (roc_zambia <- roc(wh_zambia$blood.test.result, predict(stepwise_model_rf, wh_zambia, type = "prob")$hiv.positive))
 # OR (roc_zambia <- roc(wh_zambia$blood.test.result, predict(stepwise_model_rf, wh_zambia, type = "prob")$hiv.negative)) # same result
 ### Plot ROC curve
@@ -3160,11 +3160,11 @@ zimbabwe_women_selected_factor <- dplyr::select(zimbabwe_women_factor, v001, v00
 
 ## Merging / joining both the data
 # Base file [unit of analysis] --> <zimbabwe_hiv_factor> file
-final_dataset_factor_zimbabwe <- right_join(zimbabwe_women_selected_factor, zimbabwe_hiv_factor, 
-                                            by = c("v001" = "hivclust", 
-                                                   "v002" = "hivnumb", 
-                                                   "v003" = "hivline"), 
-                                            keep = FALSE, 
+final_dataset_factor_zimbabwe <- right_join(zimbabwe_women_selected_factor, zimbabwe_hiv_factor,
+                                            by = c("v001" = "hivclust",
+                                                   "v002" = "hivnumb",
+                                                   "v003" = "hivline"),
+                                            keep = FALSE,
                                             na_matches = "never")
 # drop the 3 matching variables/columns (with <keep = FALSE>) for encoding purposes (carry no importance weightage)
 final_dataset_factor_zimbabwe <- dplyr::select(final_dataset_factor_zimbabwe, -c(v001, v002, v003))
@@ -3174,7 +3174,7 @@ final_dataset_factor_zimbabwe_label <- as.character(labelled::var_label(final_da
 final_dataset_zimbabwe <- final_dataset_factor_zimbabwe
 colnames(final_dataset_zimbabwe) <- final_dataset_factor_zimbabwe_label
 
-## ------------------------------------------------------------------------------------------------------------------------------------- ## 
+## ------------------------------------------------------------------------------------------------------------------------------------- ##
 
 # ### Data Pre-Processing Steps
 # There are duplicated column names! MAKE THEM UNIQUE!!!
@@ -3182,7 +3182,7 @@ names(final_dataset_zimbabwe) <- make.names(names(final_dataset_zimbabwe), uniqu
 colnames(final_dataset_zimbabwe)
 
 ## Important STEP!!! {feature selection/feature engineering}
-# Removing na (not applicable) variables - column names starting with "na" / 
+# Removing na (not applicable) variables - column names starting with "na" /
 # questions that are no longer part of the DHS VII core questionnaire from the final_dataset_zimbabwe
 zimbabwe_fdr_1 <- dplyr::select(final_dataset_zimbabwe, -starts_with("na."))
 
@@ -3190,21 +3190,21 @@ zimbabwe_fdr_1 <- dplyr::select(final_dataset_zimbabwe, -starts_with("na."))
 zimbabwe_ih_1 <- which(colnames(zimbabwe_fdr_1) == "sought.sti.advice.treatment.from..government.central.hospital")
 zimbabwe_ih_2 <- which(colnames(zimbabwe_fdr_1) == "sought.sti.advice.treatment.from..other")
 # convert factor to character
-zimbabwe_fdr_1[zimbabwe_ih_1:zimbabwe_ih_2] <- lapply(zimbabwe_fdr_1[zimbabwe_ih_1:zimbabwe_ih_2], 
+zimbabwe_fdr_1[zimbabwe_ih_1:zimbabwe_ih_2] <- lapply(zimbabwe_fdr_1[zimbabwe_ih_1:zimbabwe_ih_2],
                                                       as.character)
 zimbabwe_fdr_1 <- zimbabwe_fdr_1 %>% mutate_at(seq(zimbabwe_ih_1, zimbabwe_ih_2), ~replace_na(., "no"))
 # convert character back to factor
-zimbabwe_fdr_1[zimbabwe_ih_1:zimbabwe_ih_2] <- lapply(zimbabwe_fdr_1[zimbabwe_ih_1:zimbabwe_ih_2], 
+zimbabwe_fdr_1[zimbabwe_ih_1:zimbabwe_ih_2] <- lapply(zimbabwe_fdr_1[zimbabwe_ih_1:zimbabwe_ih_2],
                                                       as.factor)
 
 zimbabwe_ih_3 <- which(colnames(zimbabwe_fdr_1) == "place.for.hiv.test..government.hospital")
 zimbabwe_ih_4 <- which(colnames(zimbabwe_fdr_1) == "place.for.hiv.test..other")
 # convert factor to character
-zimbabwe_fdr_1[zimbabwe_ih_3:zimbabwe_ih_4] <- lapply(zimbabwe_fdr_1[zimbabwe_ih_3:zimbabwe_ih_4], 
+zimbabwe_fdr_1[zimbabwe_ih_3:zimbabwe_ih_4] <- lapply(zimbabwe_fdr_1[zimbabwe_ih_3:zimbabwe_ih_4],
                                                       as.character)
 zimbabwe_fdr_1 <- zimbabwe_fdr_1 %>% mutate_at(seq(zimbabwe_ih_3, zimbabwe_ih_4), ~replace_na(., "no"))
 # convert character back to factor
-zimbabwe_fdr_1[zimbabwe_ih_3:zimbabwe_ih_4] <- lapply(zimbabwe_fdr_1[zimbabwe_ih_3:zimbabwe_ih_4], 
+zimbabwe_fdr_1[zimbabwe_ih_3:zimbabwe_ih_4] <- lapply(zimbabwe_fdr_1[zimbabwe_ih_3:zimbabwe_ih_4],
                                                       as.factor)
 
 sapply(zimbabwe_fdr_1, attr, "levels") # to see factors/levels of the latest variables
@@ -3219,9 +3219,9 @@ glimpse(zimbabwe_fdr_1)
 zimbabwe_fdr_2 <- dplyr::select(zimbabwe_fdr_1, -bar.code, -lab.number)
 zimbabwe_fdr_2["blood.test.result"] <- lapply(zimbabwe_fdr_2["blood.test.result"], as.character)
 # miracle -> only 5 unique values left! ("hiv negative", "hiv  positive", "8", "9", "indeterminate")
-zimbabwe_fdr_2["blood.test.result"][zimbabwe_fdr_2["blood.test.result"] == "indeterminate" | 
-                                      zimbabwe_fdr_2["blood.test.result"] == "8" | 
-                                      zimbabwe_fdr_2["blood.test.result"] == "9"] <- 
+zimbabwe_fdr_2["blood.test.result"][zimbabwe_fdr_2["blood.test.result"] == "indeterminate" |
+                                      zimbabwe_fdr_2["blood.test.result"] == "8" |
+                                      zimbabwe_fdr_2["blood.test.result"] == "9"] <-
   "hiv negative"
 zimbabwe_fdr_2["blood.test.result"][zimbabwe_fdr_2["blood.test.result"] == "hiv  positive"] <- "hiv positive"
 # back to factor
@@ -3231,7 +3231,7 @@ sapply(zimbabwe_fdr_2, attr, "levels") # to see factors/levels of the latest var
 
 
 
-##### Selected variables from the FINAL MODEL: 
+##### Selected variables from the FINAL MODEL:
 wh_zimbabwe <- zimbabwe_fdr_2
 wh_zimbabwe <- dplyr::select(wh_zimbabwe, intersect(colnames(stepwise_final), colnames(wh_zimbabwe)))
 
@@ -3264,7 +3264,7 @@ for (i in 1:length(wh_zimbabwe)) {
 any(is.na(wh_zimbabwe)) # to check still got any null values?
 
 ### convert categorical value into numerical
-# important 
+# important
 for (i in 1:length(wh_zimbabwe)) {
   if (is.factor(wh_zimbabwe[[i]])) {
     wh_zimbabwe[[i]] <- unclass(wh_zimbabwe[[i]])
@@ -3280,19 +3280,19 @@ str(wh_zimbabwe)
 
 
 ########## TESTING MODEL RESULTS ON ZIMBABWE DATASET ##########
-(cm_zimbabwe <- confusionMatrix(factor(ifelse(predict(stepwise_model_rf, wh_zimbabwe, type = "prob")$hiv.negative > 0.5, 
-                                              "hiv.negative", "hiv.positive"), levels = levels(wh_zimbabwe$blood.test.result)), 
+(cm_zimbabwe <- confusionMatrix(factor(ifelse(predict(stepwise_model_rf, wh_zimbabwe, type = "prob")$hiv.negative > 0.5,
+                                              "hiv.negative", "hiv.positive"), levels = levels(wh_zimbabwe$blood.test.result)),
                                 wh_zimbabwe$blood.test.result))
 ## ROC curve of prediction on new dataset (Zimbabwe)
 # (roc_zimbabwe <- colAUC(predict(stepwise_model_rf, wh_zimbabwe, type = "prob")$hiv.negative, wh_zimbabwe$blood.test.result, plotROC = TRUE))
-### Create 'roc' object 
+### Create 'roc' object
 (roc_zimbabwe <- roc(wh_zimbabwe$blood.test.result, predict(stepwise_model_rf, wh_zimbabwe, type = "prob")$hiv.positive))
 # OR (roc_zimbabwe <- roc(wh_zimbabwe$blood.test.result, predict(stepwise_model_rf, wh_zimbabwe, type = "prob")$hiv.negative)) # same result
 ### Plot ROC curve
 plot(roc_zimbabwe, main = "ROC Curve -- Zimbabwe ")
 (auc_zimbabwe <- auc(roc_zimbabwe)) # calculate AUC score: 0.6815505 (Zimbabwe)
 
-# Conclusion: 
+# Conclusion:
 ## HIV Status Detection on New Datasets (Other Countries: Malawi, Zambia, Zimbabwe)
 ### Malawi AUC Score: 0.5201458
 ### Zambia AUC Score: 0.5172608
@@ -3304,11 +3304,11 @@ plot(roc_zimbabwe, main = "ROC Curve -- Zimbabwe ")
 #--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#--#
 
 #@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@
-#!# For R Shiny only #!# 
-stepwise_variables_shiny <- c("relationship.with.most.recent.sex.partner", "know.a.place.to.get.hiv.test", 
-                              "total.lifetime.number.of.sex.partners", "respondent.can.ask.partner.to.use.a.condom", 
-                              "would.buy.vegetables.from.vendor.with.hiv", 
-                              "children.with.hiv.should.be.allowed.to.attend.school.with.children.without.hiv", 
+#!# For R Shiny only #!#
+stepwise_variables_shiny <- c("relationship.with.most.recent.sex.partner", "know.a.place.to.get.hiv.test",
+                              "total.lifetime.number.of.sex.partners", "respondent.can.ask.partner.to.use.a.condom",
+                              "would.buy.vegetables.from.vendor.with.hiv",
+                              "children.with.hiv.should.be.allowed.to.attend.school.with.children.without.hiv",
                               "hiv.transmitted.by.breastfeeding", "blood.test.result")
 
 stepwise_dataset_shiny <- stepwise_final[stepwise_variables_shiny] ###!!
@@ -3318,16 +3318,16 @@ myFolds_stepwise_shiny <- createFolds(stepwise_dataset_shiny$blood.test.result, 
 set.seed(176)
 ## default p = 0.75 (cross-validation split: training percentage)
 myControl_stepwise_shiny <- trainControl(
-  summaryFunction = twoClassSummary, 
+  summaryFunction = twoClassSummary,
   classProbs = TRUE, # IMPORTANT!
-  verboseIter = FALSE, 
-  savePredictions = TRUE, 
+  verboseIter = FALSE,
+  savePredictions = TRUE,
   index = myFolds_stepwise_shiny
 )
 set.seed(177)
 stepwise_rf_shiny <- train(
-  x = dplyr::select(stepwise_dataset_shiny, -blood.test.result), 
-  y = stepwise_dataset_shiny$blood.test.result, 
+  x = dplyr::select(stepwise_dataset_shiny, -blood.test.result),
+  y = stepwise_dataset_shiny$blood.test.result,
   tuneLength = 5, # the maximum number of tuning parameter combinations that will be generated by the random search
   metric = "ROC", # AUC as the evaluation metric
   method = "ranger", # use "ranger" instead of "rf" - faster and more effective
