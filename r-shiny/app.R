@@ -15,15 +15,15 @@ library(haven) # read SAS, SPSS, and STATA file
 library(tidyverse) # to install and load core packages from the tidyverse
 library(caret) # streamline model training process + pre-processing
 library(ranger) # a fast implementation of random forests
-library(igraph) # create and manipulate graphs and analyze networks
-library(forecast) # provide methods and tools for displaying and analyzing univariate time series forecasts
-library(smotefamily) # SMOTE algorithm to solve unbalanced classification problems
-library(ROSE) # Random Over-Sampling Examples: to deal with binary classification problems in the presence of imbalanced classes
-library(themis) # deal with unbalanced data
-library(vtreat) # prepare real-world data for predictive modeling in a statistically sound manner
-library(magrittr) # offer a set of operators which make code more readable
-library(Boruta) # work with any classification method that output variable importance measure (VIM) - feature selection
-library(lattice) # a powerful and elegant high-level data visualization system for R
+# library(igraph) # create and manipulate graphs and analyze networks
+# library(forecast) # provide methods and tools for displaying and analyzing univariate time series forecasts
+# library(smotefamily) # SMOTE algorithm to solve unbalanced classification problems
+# library(ROSE) # Random Over-Sampling Examples: to deal with binary classification problems in the presence of imbalanced classes
+# library(themis) # deal with unbalanced data
+# library(vtreat) # prepare real-world data for predictive modeling in a statistically sound manner
+# library(magrittr) # offer a set of operators which make code more readable
+# library(Boruta) # work with any classification method that output variable importance measure (VIM) - feature selection
+# library(lattice) # a powerful and elegant high-level data visualization system for R
 library(DataExplorer) # to automate most of data handling and visualization
 library(SmartEDA) # multiple custom functions to perform initial exploratory analysis (EDA) on any input data (structure, relationships)
 
