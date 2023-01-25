@@ -663,7 +663,7 @@ server <- function(input, output) {
   output$map <- leaflet::renderLeaflet({
     mapping %>% 
       dplyr::filter(
-        hiv.positive.rate >= input$rate_range[1], 
+        hiv.positive.rate >= input$rate_range[1] &  
         hiv.positive.rate <= input$rate_range[2]
       ) %>% 
       leaflet() %>% 
