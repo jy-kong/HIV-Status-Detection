@@ -12,7 +12,8 @@ library(bsplus) # to incorporate help-documentation (tooltips, popovers, modals)
 library(leaflet) # an open-source JavaScript library for interactive maps
 
 library(haven) # read SAS, SPSS, and STATA file
-library(tidyverse) # to install and load core packages from the tidyverse
+library(dplyr) ## 
+# library(tidyverse) # to install and load core packages from the tidyverse
 library(caret) # streamline model training process + pre-processing
 library(ranger) # a fast implementation of random forests
 # library(igraph) # create and manipulate graphs and analyze networks
