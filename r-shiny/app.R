@@ -104,7 +104,7 @@ zimbabwe30 <- dplyr::select(zimbabwe_fdr_1, shiny_selected_variables)
 #                               "total.lifetime.number.of.sex.partners", "respondent.can.ask.partner.to.use.a.condom",
 #                               "would.buy.vegetables.from.vendor.with.hiv",
 #                               "children.with.hiv.should.be.allowed.to.attend.school.with.children.without.hiv",
-#                               "hiv.transmitted.by.breastfeeding", "blood.test.result")
+#                               "hiv.transmitted.by.breastfeeding", "blood.test.result", "hiv.transmitted.during.pregnancy")
 # 
 # stepwise_dataset_shiny <- stepwise_shiny[stepwise_variables_shiny] ###!!
 # 
@@ -430,7 +430,7 @@ ui <- fluidPage(
     tabPanel(
       "User Manual", 
       tags$iframe(style = "height:725px; width:100%; scrolling=yes", 
-                  src = "HIV Status Detection Among Women Using Machine Learning - User Manual.pdf")
+                  src = "HIV Status Detection Among Women Using Machine Learning - Users Manual.pdf")
     )
     
     
@@ -745,6 +745,15 @@ server <- function(input, output) {
       else if (input$breastfeeding == "Don't know") {
         gg <- 3
       }
+      if (input$pregnancy == "Yes") {
+        hh <- 1
+      }
+      else if (input$pregnancy == "No") {
+        hh <- 2
+      }
+      else if (input$pregnancy == "Don't know") {
+        hh <- 3
+      }
       
       
       # Create empty data frame
@@ -755,8 +764,9 @@ server <- function(input, output) {
                                 would.buy.vegetables.from.vendor.with.hiv = numeric(),
                                 children.with.hiv.should.be.allowed.to.attend.school.with.children.without.hiv = numeric(),
                                 hiv.transmitted.by.breastfeeding = numeric(),
+                                hiv.transmitted.during.pregnancy = numeric(),
                                 stringsAsFactors = FALSE)
-      new_dataset[1, ] <- list(aa, bb, cc, dd, ee, ff, gg)
+      new_dataset[1, ] <- list(aa, bb, cc, dd, ee, ff, gg, hh)
       hiv_prob <- predict(stepwise_rf_shiny, new_dataset, type = "prob")$hiv.positive
       
       
@@ -776,6 +786,15 @@ server <- function(input, output) {
       # else {
       #   paste0("You are HIV-negative!")
       # }
+      
+      
+      
+      if ((aa == 6 & dd == 2) | (aa == 6 & cc >= 4) | (dd == 2 & cc >= 4) | (hiv_prob >= 0.4) | (cc >= 5 & dd == 2)) {
+        paste0("You are HIV-positive!")
+      }
+      else {
+        paste0("You are HIV-negative!")
+      }
       
       
       

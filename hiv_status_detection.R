@@ -3309,7 +3309,7 @@ stepwise_variables_shiny <- c("relationship.with.most.recent.sex.partner", "know
                               "total.lifetime.number.of.sex.partners", "respondent.can.ask.partner.to.use.a.condom",
                               "would.buy.vegetables.from.vendor.with.hiv",
                               "children.with.hiv.should.be.allowed.to.attend.school.with.children.without.hiv",
-                              "hiv.transmitted.by.breastfeeding", "blood.test.result")
+                              "hiv.transmitted.by.breastfeeding", "blood.test.result", "hiv.transmitted.during.pregnancy")
 
 stepwise_dataset_shiny <- stepwise_final[stepwise_variables_shiny] ###!!
 
