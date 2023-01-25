@@ -15,17 +15,17 @@ library(haven) # read SAS, SPSS, and STATA file
 library(tidyverse) # to install and load core packages from the tidyverse
 library(caret) # streamline model training process + pre-processing
 library(ranger) # a fast implementation of random forests
-# library(igraph) # create and manipulate graphs and analyze networks
-# library(forecast) # provide methods and tools for displaying and analyzing univariate time series forecasts
-# library(smotefamily) # SMOTE algorithm to solve unbalanced classification problems
-# library(ROSE) # Random Over-Sampling Examples: to deal with binary classification problems in the presence of imbalanced classes
-# library(themis) # deal with unbalanced data
-# library(vtreat) # prepare real-world data for predictive modeling in a statistically sound manner
-# library(magrittr) # offer a set of operators which make code more readable
-# library(Boruta) # work with any classification method that output variable importance measure (VIM) - feature selection
-# library(lattice) # a powerful and elegant high-level data visualization system for R
-# library(DataExplorer) # to automate most of data handling and visualization
-# library(SmartEDA) # multiple custom functions to perform initial exploratory analysis (EDA) on any input data (structure, relationships)
+library(igraph) # create and manipulate graphs and analyze networks
+library(forecast) # provide methods and tools for displaying and analyzing univariate time series forecasts
+library(smotefamily) # SMOTE algorithm to solve unbalanced classification problems
+library(ROSE) # Random Over-Sampling Examples: to deal with binary classification problems in the presence of imbalanced classes
+library(themis) # deal with unbalanced data
+library(vtreat) # prepare real-world data for predictive modeling in a statistically sound manner
+library(magrittr) # offer a set of operators which make code more readable
+library(Boruta) # work with any classification method that output variable importance measure (VIM) - feature selection
+library(lattice) # a powerful and elegant high-level data visualization system for R
+library(DataExplorer) # to automate most of data handling and visualization
+library(SmartEDA) # multiple custom functions to perform initial exploratory analysis (EDA) on any input data (structure, relationships)
 
 
 
@@ -201,7 +201,7 @@ ui <- fluidPage(
           pickerInput("relationship", "Relationship with most recent sex partner", multiple = F, 
                       choices = c("Live-in partner", "Spouse", "Boyfriend not living with respondent", "Casual acquaintance", 
                                   "Commercial sex worker", "Other"), selected = "Live-in partner"), 
-          sliderInput("partners", "Total lifetime number of sex partners", min = 0, max = 100, value = 5, step = 1, 
+          sliderInput("partners", "Total lifetime number of sex partners", min = 1, max = 10, value = 2, step = 1, 
                       animate = T, ticks = T), 
           em(strong(p("Knowledge", style = "color:green; font-size:24px"))), ##### Knowledge
           # radioGroupButtons("place", "Do you know a place to get HIV test", choices = c("Yes", "No"), 
@@ -689,93 +689,99 @@ server <- function(input, output) {
     input$result_button
     isolate({
       
-      # if (input$relationship == "Spouse") {
-      #   aa <- 1
-      # }
-      # else if (input$relationship == "Boyfriend not living with respondent") {
-      #   aa <- 2
-      # }
-      # else if (input$relationship == "Casual acquaintance") {
-      #   aa <- 4
-      # }
-      # else if (input$relationship == "Commercial sex worker") {
-      #   aa <- 6
-      # }
-      # else if (input$relationship == "Live-in partner") {
-      #   aa <- 7
-      # }
-      # else if (input$relationship == "Other") {
-      #   aa <- 8
-      # }
-      # bb <- ifelse(input$place == "Yes", 2, 1)
-      # cc <- input$partners
-      # if (input$condom == "No") {
-      #   dd <- 1
-      # }
-      # else if (input$condom == "Yes") {
-      #   dd <- 2
-      # }
-      # else if (input$condom == "Don't know") {
-      #   dd <- 3
-      # }
-      # if (input$vegetables == "No") {
-      #   ee <- 1
-      # }
-      # else if (input$vegetables == "Yes") {
-      #   ee <- 2
-      # }
-      # else if (input$vegetables == "Don't know") {
-      #   ee <- 3
-      # }
-      # if (input$school == "No") {
-      #   ff <- 1
-      # }
-      # else if (input$school == "Yes") {
-      #   ff <- 2
-      # }
-      # else if (input$school == "Don't know") {
-      #   ff <- 3
-      # }
-      # if (input$breasfeeding == "No") {
-      #   gg <- 1
-      # }
-      # else if (input$breasfeeding == "Yes") {
-      #   gg <- 2
-      # }
-      # else if (input$breasfeeding == "Don't know") {
-      #   gg <- 3
-      # }
-      # 
-      # 
-      # # Create empty data frame
-      # new_dataset <- data.frame(relationship.with.most.recent.sex.partner = numeric(),
-      #                           know.a.place.to.get.hiv.test = numeric(),
-      #                           total.lifetime.number.of.sex.partners = numeric(),
-      #                           respondent.can.ask.partner.to.use.a.condom = numeric(),
-      #                           would.buy.vegetables.from.vendor.with.hiv = numeric(),
-      #                           children.with.hiv.should.be.allowed.to.attend.school.with.children.without.hiv = numeric(),
-      #                           hiv.transmitted.by.breastfeeding = numeric(),
-      #                           stringsAsFactors = FALSE)
-      # new_dataset[1, ] <- list(aa, bb, cc, dd, ee, ff, gg)
-      # hiv_prob <- predict(stepwise_rf_shiny, new_dataset, type = "prob")$hiv.positive
-      # 
-      # 
-      # paste0("Your probability of being an HIV-positive is ", round(hiv_prob, 2), "%. ")
+      if (input$relationship == "Spouse") {
+        aa <- 1
+      }
+      else if (input$relationship == "Boyfriend not living with respondent") {
+        aa <- 2
+      }
+      else if (input$relationship == "Casual acquaintance") {
+        aa <- 4
+      }
+      else if (input$relationship == "Commercial sex worker") {
+        aa <- 6
+      }
+      else if (input$relationship == "Live-in partner") {
+        aa <- 7
+      }
+      else if (input$relationship == "Other") {
+        aa <- 8
+      }
+      bb <- ifelse(input$place == "Yes", 1, 2)
+      cc <- input$partners
+      if (input$condom == "Yes") {
+        dd <- 1
+      }
+      else if (input$condom == "No") {
+        dd <- 2
+      }
+      else if (input$condom == "Don't know") {
+        dd <- 3
+      }
+      if (input$vegetables == "Yes") {
+        ee <- 1
+      }
+      else if (input$vegetables == "No") {
+        ee <- 2
+      }
+      else if (input$vegetables == "Don't know") {
+        ee <- 3
+      }
+      if (input$school == "Yes") {
+        ff <- 1
+      }
+      else if (input$school == "No") {
+        ff <- 2
+      }
+      else if (input$school == "Don't know") {
+        ff <- 3
+      }
+      if (input$breastfeeding == "Yes") {
+        gg <- 1
+      }
+      else if (input$breastfeeding == "No") {
+        gg <- 2
+      }
+      else if (input$breastfeeding == "Don't know") {
+        gg <- 3
+      }
+      
+      
+      # Create empty data frame
+      new_dataset <- data.frame(relationship.with.most.recent.sex.partner = numeric(),
+                                know.a.place.to.get.hiv.test = numeric(),
+                                total.lifetime.number.of.sex.partners = numeric(),
+                                respondent.can.ask.partner.to.use.a.condom = numeric(),
+                                would.buy.vegetables.from.vendor.with.hiv = numeric(),
+                                children.with.hiv.should.be.allowed.to.attend.school.with.children.without.hiv = numeric(),
+                                hiv.transmitted.by.breastfeeding = numeric(),
+                                stringsAsFactors = FALSE)
+      new_dataset[1, ] <- list(aa, bb, cc, dd, ee, ff, gg)
+      hiv_prob <- predict(stepwise_rf_shiny, new_dataset, type = "prob")$hiv.positive
+      
+      
+      paste0("Your probability of being an HIV-positive is ", round(hiv_prob, 2) * 100, "%. ")
+      
+      
+      ##### can i do until can see which factors contribute the most to the HIV result??!
       
       
       # do for pregnancy... <input$pregnancy>
       ##### other attitude / behavior
       
-      scam <- round(runif(1, 30.0, 90.0), 2)
-      if (scam >= 60) {
-        paste0("You are HIV-positive!")
-      }
-      else {
-        paste0("You are HIV-negative!")
-      }
+      # scam <- round(runif(1, 30.0, 90.0), 2)
+      # if (scam >= 60) {
+      #   paste0("You are HIV-positive!")
+      # }
+      # else {
+      #   paste0("You are HIV-negative!")
+      # }
+      
+      
+      
       # paste0("Your probability of being an HIV-positive is ", scam, "%. ")
       
-      #! embed video link...
+      #! embed videos link...
       
     })
   })
