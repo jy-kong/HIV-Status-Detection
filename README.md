@@ -11,7 +11,7 @@
  Since this project involves a huge amount of datasets, deployment into a website link is not feasible!
 
 The main purpose of this guideline is to illustrate how to run Shiny apps from a remote source. 
-There are 2 ways to access the website applcation / data product in the local machine: 🔎
+There are 2 ways to access the website application / data product on the local machine: 🔎
 
 Method 1: 📖
 1) Register an account on R Studio Cloud.
